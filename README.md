@@ -1,20 +1,22 @@
 # Michael Atee — Cybersecurity | Cloud | Frontend 
 
-This is the source code for my professional web profile.
+This repository contains source code for my professional web profile.
 
 It showcases who I am, what I have built, and how I approach technology with a focus on security, performance, and long-term maintainability.
 
 The site is styled with my personal colour palette, rooted in autumn tones, and structured to reflect how I work: **clean, deliberate, and detail-driven**.
 
 
+
 ## Why This Exists
 
-I hAve worked across multiple industries, consulting, automotive, retail, and tech, and transitioned into cloud and cybersecurity through both real-world experience and formal training. This portfolio is built to:
+I have worked across multiple industries, consulting, automotive, retail, and tech, and transitioned into cloud and cybersecurity through both real-world experience and formal training. This portfolio is built to:
 
 - Provide access to my CV and technical write-ups  
 - Walk through some key projects I have built  
 - Demonstrate how I apply security standards like OWASP Top 10, NIST CSF, and ISO 27001 in practice  
 - Share design decisions behind the code, not just the outcome
+
 
 
 ## Projects
@@ -27,7 +29,8 @@ Each project links to its own documentation so that anyone, technical or not, ca
 | Fixed by MYC — Automotive Advisory   | `/docs/fixedbymyc-doc.pdf`    |
 | IoT Intrusion Detection (ESP32-CAM)  | `/docs/iot-ids-doc.pdf`       |
 
-These are projects I’ve built independently or led end-to-end. In previous roles like Loystar (React + Ant Design), I’ve also contributed to frontend development, but those aren’t the focus of this portfolio.
+These are projects I have built independently or led end-to-end. In previous roles like Loystar (React + Ant Design), I have also contributed to frontend development, but those are not the focus of this portfolio.
+
 
 
 ## Key Areas of Work
@@ -37,6 +40,7 @@ These are projects I’ve built independently or led end-to-end. In previous rol
 - **Web Development**: Next.js, React, custom theming, component design  
 - **Automation & IoT**: Real-world security applications using microcontrollers (ESP32)  
 - **Technical Documentation**: Each project includes an explanation of the why, how, and what’s next
+
 
 
 ## Security Implementation in This Site
@@ -53,23 +57,50 @@ This site is not just frontend UI focused, it is built with defensive programmin
 I run periodic manual checks using **Burp Suite**, browser console tools, and my own Chrome extension vulnerability scanner **(Scanzo)** to verify resilience.
 
 
-## Contact Submission Alerts & Logging
 
-All contact form submissions are handled by a server-side API route built in Next.js. Messages are validated and sanitised before being processed.
+## Admin Console
 
-Alerts are pushed in real time using [LogSnag](https://logsnag.com/) (free tier) and emails are sent using **Nodemailer** + **Gmail App Passwords**.
-
-Each submission can optionally be logged to Supabase or written to secure audit logs (not stored in production by default).
+The portfolio includes a private `/admin` console to manage site content securely.  
 
 
-## Traffic Monitoring and IP Filtering
 
-- **Cloudflare** provides DNS, TLS, basic analytics, and region-based IP controls  
-- Firewall rules block suspicious traffic and limit form access from specific countries or IPs  
-- All paths like `/api/contact` are monitored and rate-limited using Cloudflare Rules  
-- Optional IP-based access logs can be piped into Supabase or `.log` files for later review
+### Features
+- Add, edit, or remove projects from a protected dashboard  
+- Upload new technical documentation PDFs into `/public/docs/`  
+- Modify written sections like About, Skills, or Experience  
 
-These tools help enforce visibility and resilience without introducing heavy tracking or third-party analytics.
+
+
+### Security Controls
+- Authentication via NextAuth (GitHub/Google OAuth)  
+- Enforced `HttpOnly`, `Secure`, `SameSite=Strict` cookies  
+- Role-based access — only admin can access `/admin`  
+- Input sanitisation and validation for all fields  
+- PDF uploads restricted by type and size  
+- Cloudflare firewall rules and rate limiting on `/api/admin/*`  
+- Audit logs of changes stored with timestamp and user identity  
+
+
+
+### Storage
+- Project data stored in `/data/projects.json`  
+- Each edit updates this JSON file and the live site reflects changes immediately  
+- PDFs stored in `/public/docs/`  
+
+This admin console makes the portfolio dynamic while demonstrating secure coding and access control in practice.  
+
+
+
+## Traffic Monitoring and Access Control
+
+Traffic is monitored and filtered using **Cloudflare services**:  
+
+- HTTPS and TLS enforced by default  
+- Analytics include requests by IP, region, and path  
+- Firewall rules restrict form abuse and block suspicious IP ranges  
+- Rate limiting on contact form and admin routes  
+- Optional logging to Supabase for further analysis .
+
 
 
 ## Stack
@@ -84,16 +115,22 @@ These tools help enforce visibility and resilience without introducing heavy tra
 - **Docs**: PDFs hosted locally under `/public/docs/`
 
 
+
 ## Folder Structure
 
 /my-profile-website
+├── data/
+│   └── projects.json 
 ├── public/
-│ ├── docs/
-│ │ ├── scanzo-tech-doc.pdf
-│ │ ├── fixedbymyc-doc.pdf
-│ │ └── iot-ids-doc.pdf
-│ └── images/
+│ └── docs/ 
 ├── pages/
+│ ├── admin/ 
+│ │ └── index.tsx
+│ ├── api/
+│ │ ├── admin/ 
+│ │ │ ├── addProject.ts
+│ │ │ ├── editProject.ts
+│ │ │ └── uploadDoc.ts
 │ ├── index.tsx
 │ ├── about.tsx
 │ ├── skills.tsx
@@ -112,6 +149,7 @@ These tools help enforce visibility and resilience without introducing heavy tra
 └── package.json
 
 
+
 ## Get Started
 
 Install dependencies and run the dev server:
@@ -123,6 +161,9 @@ Build for production:
 
 npm run build
 npm start
+
+Deployment is handled via Vercel. Cloudflare is used for DNS, TLS, analytics, and firewall rules.  
+
 
 
 ## Contact
