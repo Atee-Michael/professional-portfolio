@@ -6,7 +6,7 @@ It showcases who I am, what I have built, and how I approach technology with a f
 
 The site is styled with my personal colour palette, rooted in autumn tones, and structured to reflect how I work: **clean, deliberate, and detail-driven**.
 
-
+<br>
 
 ## Why This Exists
 
@@ -17,7 +17,7 @@ I have worked across multiple industries, consulting, automotive, retail, and te
 - Demonstrate how I apply security standards like OWASP Top 10, NIST CSF, and ISO 27001 in practice  
 - Share design decisions behind the code, not just the outcome
 
-
+<br>
 
 ## Projects
 
@@ -31,7 +31,7 @@ Each project links to its own documentation so that anyone, technical or not, ca
 
 These are projects I have built independently or led end-to-end. In previous roles like Loystar (React + Ant Design), I have also contributed to frontend development, but those are not the focus of this portfolio.
 
-
+<br>
 
 ## Key Areas of Work
 
@@ -41,7 +41,7 @@ These are projects I have built independently or led end-to-end. In previous rol
 - **Automation & IoT**: Real-world security applications using microcontrollers (ESP32)  
 - **Technical Documentation**: Each project includes an explanation of the why, how, and what’s next
 
-
+<br>
 
 ## Security Implementation in This Site
 
@@ -56,20 +56,20 @@ This site is not just frontend UI focused, it is built with defensive programmin
 
 I run periodic manual checks using **Burp Suite**, browser console tools, and my own Chrome extension vulnerability scanner **(Scanzo)** to verify resilience.
 
-
+<br>
 
 ## Admin Console
 
 The portfolio includes a private `/admin` console to manage site content securely.  
 
-
+<br>
 
 ### Features
 - Add, edit, or remove projects from a protected dashboard  
 - Upload new technical documentation PDFs into `/public/docs/`  
 - Modify written sections like About, Skills, or Experience  
 
-
+<br>
 
 ### Security Controls
 - Authentication via NextAuth (GitHub/Google OAuth)  
@@ -80,7 +80,7 @@ The portfolio includes a private `/admin` console to manage site content securel
 - Cloudflare firewall rules and rate limiting on `/api/admin/*`  
 - Audit logs of changes stored with timestamp and user identity  
 
-
+<br>
 
 ### Storage
 - Project data stored in `/data/projects.json`  
@@ -89,7 +89,7 @@ The portfolio includes a private `/admin` console to manage site content securel
 
 This admin console makes the portfolio dynamic while demonstrating secure coding and access control in practice.  
 
-
+<br>
 
 ## Traffic Monitoring and Access Control
 
@@ -101,7 +101,7 @@ Traffic is monitored and filtered using **Cloudflare services**:
 - Rate limiting on contact form and admin routes  
 - Optional logging to Supabase for further analysis .
 
-
+<br>
 
 ## Stack
 
@@ -114,11 +114,12 @@ Traffic is monitored and filtered using **Cloudflare services**:
 - **Deployment**: Vercel or Netlify  
 - **Docs**: PDFs hosted locally under `/public/docs/`
 
-
+<br>
 
 ## Folder Structure
 
-/my-profile-website
+```
+my-profile-website/
 ├── data/
 │   └── projects.json 
 ├── public/
@@ -147,8 +148,9 @@ Traffic is monitored and filtered using **Cloudflare services**:
 ├── next.config.js
 ├── tsconfig.json
 └── package.json
+```
 
-
+<br>
 
 ## Get Started
 
@@ -164,7 +166,7 @@ npm start
 
 Deployment is handled via Vercel. Cloudflare is used for DNS, TLS, analytics, and firewall rules.  
 
-
+<br>
 
 ## Contact
 
