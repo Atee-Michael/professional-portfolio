@@ -1,15 +1,7 @@
 import { Card, Tag, Space, Button } from "antd";
+import { Project } from "@/types/project";
 
-type Props = {
-  title: string;
-  description: string;
-  stack: string[];
-  repoLink?: string;
-  liveLink?: string;
-  docPath: string;
-};
-
-export default function ProjectCard({ title, description, stack, repoLink, liveLink, docPath }: Props) {
+export default function ProjectCard({ title, description, stack, repoLink, liveLink, docPath }: Project) {
   return (
     <Card title={title}>
       <p>{description}</p>
