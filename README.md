@@ -120,34 +120,28 @@ Traffic is monitored and filtered using **Cloudflare services**:
 
 ```
 my-profile-website/
-├── data/
-│   └── projects.json 
 ├── public/
-│ └── docs/ 
-├── pages/
-│ ├── admin/ 
-│ │ └── index.tsx
-│ ├── api/
-│ │ ├── admin/ 
-│ │ │ ├── addProject.ts
-│ │ │ ├── editProject.ts
-│ │ │ └── uploadDoc.ts
-│ ├── index.tsx
-│ ├── about.tsx
-│ ├── skills.tsx
-│ ├── projects.tsx
-│ ├── experience.tsx
-│ ├── education.tsx
-│ ├── security.tsx
-│ └── contact.tsx
-├── components/
-│ └── ProjectCard.tsx
-├── styles/
-│ ├── globals.css
-│ └── theme.css
-├── next.config.js
+│   └── docs/
+├── src/
+│   ├── components/
+│   │   └── SiteLayout.tsx
+│   ├── data/
+│   │   └── projects.json
+│   ├── pages/
+│   │   ├── _app.tsx
+│   │   ├── index.tsx
+│   │   ├── about.tsx
+│   │   ├── skills.tsx
+│   │   ├── projects.tsx
+│   │   ├── security.tsx
+│   │   └── contact.tsx
+│   ├── styles/
+│   │   ├── globals.css
+│   │   └── theme.css
+│   └── lib/
 ├── tsconfig.json
 └── package.json
+
 ```
 
 <br>

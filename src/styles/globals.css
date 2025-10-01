@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+* { box-sizing: border-box; }
+html, body, #__next { height: 100%; }
+body {
+  margin: 0;
+  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: var(--forest);
+  color: var(--text);
+}
+
+/* Links and focus states */
+a { color: var(--mustard); text-decoration: none; }
+a:hover, a:focus { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--mustard); outline-offset: 2px; }
+
+/* Utility spacing */
+.section { padding: 48px 0; }
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+/* Ant Design tweaks for dark base */
+.ant-layout { background: var(--forest); }
+.ant-layout-header { background: rgba(0,0,0,0.5); backdrop-filter: saturate(120%) blur(6px); }
+.ant-layout-footer { background: #02243a; color: var(--muted); }
+.ant-card { background: var(--navy); border: 1px solid var(--olive); }
+.ant-card-head-title, .ant-typography, .ant-menu, .ant-btn { color: var(--text); }
+
+/* Buttons */
+.ant-btn-primary { background: var(--mustard); border-color: var(--mustard); color: #0B1A1F; }
+.ant-btn-primary:hover { filter: brightness(1.05); }
