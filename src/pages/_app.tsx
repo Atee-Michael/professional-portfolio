@@ -17,18 +17,34 @@ export default function App({ Component, pageProps }: AppProps) {
         theme={{
           algorithm: antdTheme.defaultAlgorithm,
           token: {
-            colorPrimary: "#D4A017",        // mustard
-            colorBgBase: "#0B3D2E",         // forest
-            colorTextBase: "#F5F5F5",
-            colorLink: "#D4A017",
-            borderRadius: 12,
-            fontFamily: "Poppins, Segoe UI, Roboto, sans-serif",
+            colorPrimary: "var(--primary)",
+            colorBgBase: "var(--background)",
+            colorTextBase: "var(--foreground)",
+            colorLink: "var(--primary)",
+            borderRadius: 10,
+            fontFamily: "Segoe UI, Roboto, sans-serif",
           },
           components: {
-            Layout: { headerBg: "rgba(0,0,0,0.5)", bodyBg: "#0B3D2E", footerBg: "#02243a" },
-            Card: { colorBgContainer: "#003366", colorBorderSecondary: "#556B2F" },
-            Button: { colorPrimary: "#D4A017", colorPrimaryHover: "#e0b126" },
-            Menu: { itemColor: "rgba(245,245,245,0.85)", itemHoverColor: "#D4A017", itemSelectedColor: "#D4A017" },
+            Layout: {
+              headerBg: "rgba(3, 2, 19, 0.08)",
+              bodyBg: "var(--background)",
+              footerBg: "rgba(3, 2, 19, 0.06)",
+            },
+            Card: {
+              colorBgContainer: "var(--card)",
+              colorBorderSecondary: "var(--border)",
+              borderRadiusLG: 10,
+            },
+            Button: {
+              colorPrimary: "var(--primary)",
+              colorPrimaryHover: "var(--primary)",
+              borderRadius: 10,
+            },
+            Menu: {
+              itemColor: "var(--foreground)",
+              itemHoverColor: "var(--primary)",
+              itemSelectedColor: "var(--primary)",
+            },
           },
         }}
       >

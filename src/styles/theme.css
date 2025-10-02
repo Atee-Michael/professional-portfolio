@@ -1,12 +1,108 @@
-:root{
-  --olive:#556B2F;
-  --mustard:#D4A017;
-  --chocolate:#7B3F00;
-  --camel:#8B5A2B;
-  --forest:#0B3D2E;
-  --navy:#003366;
-  --burgundy:#800020;
+/* Align legacy page classes to new tokenized design system */
 
-  --text:#F5F5F5;
-  --muted:#D9D9D9;
+/* Homepage surface with subtle vignettes over global background */
+.home-bg{
+  background:
+    radial-gradient(1000px 480px at 80% -10%, rgba(3,2,19,0.06), transparent 60%),
+    radial-gradient(800px 420px at 10% 110%, rgba(3,2,19,0.05), transparent 60%),
+    var(--background);
 }
+
+/* Card with gradient accent and hover lift */
+.premium-card{
+  position: relative;
+  background: var(--card) !important;
+  color: var(--card-foreground);
+  border-radius: var(--radius);
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background 220ms ease;
+}
+.premium-card:hover{
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: var(--shadow-hover);
+  border-color: transparent !important;
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    var(--creative-gradient-1) border-box !important;
+  background-clip: padding-box, border-box !important;
+}
+.premium-card::before{
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient( to bottom, rgba(255,255,255,0.20), rgba(255,255,255,0.04) 40%, transparent 70%);
+  pointer-events: none;
+}
+.premium-card .ant-card-head-title{ color: var(--foreground); font-weight: 700; }
+.premium-card .ant-typography{ color: var(--foreground); }
+
+/* Buttons mapped to gradient tokens */
+.premium-btn.ant-btn{
+  background: var(--creative-gradient-1) !important;
+  border: none !important;
+  color: #fff !important;
+  border-radius: var(--radius);
+  transition: transform 200ms ease, box-shadow 200ms ease, background 260ms ease;
+}
+.premium-btn.ant-btn:hover,
+.premium-btn.ant-btn:focus{
+  transform: scale(1.05);
+  box-shadow: var(--shadow-hover);
+  background: var(--creative-gradient-2) !important;
+}
+
+/* Gradient headline and strong text (hero) */
+.gradient-text{
+  background: linear-gradient(90deg, var(--creative-accent-bright), var(--creative-accent-bright-2), #4ade80);
+  background-clip: text;             /* try standard first */
+  -webkit-background-clip: text;     /* webkit */
+  color: transparent;                /* non-webkit fallback */
+  -webkit-text-fill-color: transparent; /* webkit */
+  font-weight: 800;
+}
+.strong-text{ color: var(--foreground); font-weight: 800; }
+
+/* Outline/secondary CTA button */
+.outline-btn.ant-btn{
+  background: transparent !important;
+  border: 2px solid var(--primary) !important;
+  color: var(--primary) !important;
+  font-weight: 500;
+  border-radius: var(--radius);
+  transition: all 0.25s ease;
+}
+.outline-btn.ant-btn:hover{
+  border-color: var(--creative-accent-bright) !important;
+  color: var(--creative-accent-bright) !important;
+}
+
+/* Hero image (optional if an image is present) */
+.hero-image img{
+  width: 260px; height: 260px; border-radius: 50%;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hero-image img:hover{
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 120, 50, 0.5);
+}
+
+/* About utilities */
+.about-section{ padding: 5rem 2rem; }
+.about-img{ width: 280px; height: 280px; border-radius: 50%; box-shadow: var(--shadow-card); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.about-img:hover{ transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 160, 100, 0.4); }
+
+/* Dark theme radial accents for body and home section */
+/* Scope radial accents to dark mode only */
+.dark body, .dark .home-bg{
+  background:
+    radial-gradient(800px 600px at 20% 20%, rgba(255, 0, 255, 0.05), transparent 60%),
+    radial-gradient(900px 700px at 80% 120%, rgba(0, 255, 200, 0.05), transparent 60%),
+    var(--background);
+  color: var(--foreground);
+}
+
+/* Buttons — outline variant with deep accent */
+.outline-btn.ant-btn{ background: transparent !important; border: 2px solid var(--creative-accent-deep) !important; color: var(--creative-accent-deep) !important; border-radius: var(--radius); transition: all 0.3s ease; }
+.outline-btn.ant-btn:hover{ border-color: var(--creative-accent-bright) !important; color: var(--creative-accent-bright) !important; }
