@@ -1,4 +1,5 @@
 /* Global Design System*/
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
 * { box-sizing: border-box; }
 html, body, #__next { height: 100%; }
 
@@ -18,6 +19,14 @@ html, body, #__next { height: 100%; }
   --primary: #030213;
   --primary-foreground: #ffffff;
   --creative-accent-deep: #030213;
+
+  /* Warm Autumn extras */
+  --accent-mustard: #d4a017;
+  --accent-olive: #556b2f;
+  --accent-navy: #003366;
+  --accent-burgundy: #800020;
+  --card-bg: #ffffff;
+  --ring-gradient: conic-gradient(from 0deg, var(--accent-mustard), var(--accent-olive), var(--accent-navy), var(--accent-burgundy), var(--accent-mustard));
 
   /* Accents & Gradients */
   --accent: #e9ebef;
@@ -46,6 +55,7 @@ html, body, #__next { height: 100%; }
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
   --border: rgba(255, 255, 255, 0.12);
+  --card-bg: #02243a;
 }
 
 body {
@@ -189,4 +199,14 @@ h1, h2, h3 {
 .home-bg::before{
   content: ""; position: absolute; left: 0; right: 0; top: 0; height: 180px; pointer-events: none;
   background: linear-gradient(180deg, rgba(3,2,19,0.06), rgba(3,2,19,0.0));
+}
+
+/* Floating orbs (used by Hero) */
+@keyframes float1 {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(60px, -40px); }
+}
+@keyframes float2 {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-80px, 50px); }
 }

@@ -31,6 +31,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
             theme="dark"
             items={navItems}
             style={{ background: "transparent", borderBottom: "none" }}
+            className="site-nav"
           />
         </div>
       </Header>

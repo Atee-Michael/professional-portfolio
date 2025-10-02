@@ -106,3 +106,47 @@
 /* Buttons — outline variant with deep accent */
 .outline-btn.ant-btn{ background: transparent !important; border: 2px solid var(--creative-accent-deep) !important; color: var(--creative-accent-deep) !important; border-radius: var(--radius); transition: all 0.3s ease; }
 .outline-btn.ant-btn:hover{ border-color: var(--creative-accent-bright) !important; color: var(--creative-accent-bright) !important; }
+
+/* Navbar — make items clearly hoverable like CTA */
+.site-nav .ant-menu-overflow-item,
+.site-nav .ant-menu-item{
+  border-radius: 999px;
+  margin: 0 4px;
+}
+.site-nav .ant-menu-item a{ color: var(--foreground); font-weight: 500; }
+.site-nav .ant-menu-item:hover,
+.site-nav .ant-menu-item-active{
+  background: var(--creative-gradient-1);
+}
+.site-nav .ant-menu-item:hover a,
+.site-nav .ant-menu-item-active a{
+  color: #fff !important;
+}
+
+/* Hero — centered composition like the mockup */
+.hero{ position: relative; text-align: center; display: grid; place-items: center; gap: 14px; }
+.hero::before{
+  content: ""; position: absolute; inset: -60px -20% auto -20%; height: 320px; z-index: -1;
+  background: radial-gradient(600px 300px at 20% 30%, rgba(3,2,19,0.06), transparent 60%),
+              radial-gradient(700px 340px at 80% 10%, rgba(3,2,19,0.05), transparent 60%);
+}
+.hero-badge{ padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--foreground); background: rgba(255,255,255,0.6); backdrop-filter: blur(6px); font-weight: 600; }
+.dark .hero-badge{ background: rgba(3,2,19,0.35); }
+.hero-name{ line-height: 0.95; margin-top: 6px; }
+.hero-first{ display: block; font-size: clamp(48px, 7vw, 96px); font-weight: 800; letter-spacing: 0.3px; }
+.hero-last{ display: block; font-size: clamp(56px, 9vw, 120px); font-weight: 900; color: var(--foreground); }
+.hero-underline{ width: 140px; height: 6px; background: var(--accent-mustard); border: none; border-radius: 6px; margin: 6px 0 0; }
+.hero-title{ margin: 0; color: var(--foreground) !important; }
+.hero-sub{ color: var(--creative-accent-bright); font-weight: 600; display: block; margin-top: 4px; }
+.hero-focus{ margin: 0; font-weight: 800 !important; }
+.hero-tagline{ max-width: 760px; color: var(--muted-foreground); margin: 8px auto 0; font-size: 18px; }
+.hero-ctas{ display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+.hero-portrait{ margin-top: 12px; filter: drop-shadow(0 16px 30px rgba(0,0,0,0.25)); }
+.hero-down{ display: inline-block; width: 44px; height: 44px; line-height: 44px; border-radius: 50%; border: 1px solid var(--border); color: var(--foreground); text-decoration: none; margin-top: 8px; transition: transform .2s ease; }
+.hero-down:hover{ transform: translateY(3px); }
+
+/* Social icons */
+.hero-socials{ display: flex; gap: 10px; justify-content: center; margin-top: 8px; }
+.social-btn{ display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); color: var(--foreground); background: #fff; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+.dark .social-btn{ background: rgba(3,2,19,0.25); }
+.social-btn:hover{ transform: translateY(-2px); box-shadow: var(--shadow-hover); background: var(--creative-gradient-1); color: #fff; }

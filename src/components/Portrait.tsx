@@ -1,10 +1,10 @@
 import Image from "next/image";
-import styles from "@/styles/Portrait.module.css";
+import styles from "./Portrait.module.css";
 
 export default function Portrait() {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.circle}></div>
+      <div className={styles.ring}></div>
       <Image
         src="/images/michael-portrait.jpg"
         alt="Michael Atee"
@@ -16,4 +16,3 @@ export default function Portrait() {
     </div>
   );
 }
-
