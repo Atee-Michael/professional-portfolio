@@ -1,0 +1,348 @@
+/* Align legacy page classes to new tokenized design system */
+
+/* Homepage surface with subtle vignettes over global background */
+.home-bg{
+  background:
+    radial-gradient(1000px 480px at 80% -10%, rgba(3,2,19,0.06), transparent 60%),
+    radial-gradient(800px 420px at 10% 110%, rgba(3,2,19,0.05), transparent 60%),
+    var(--background);
+}
+
+/* Card with gradient accent and hover lift */
+.premium-card{
+  position: relative;
+  background: var(--card) !important;
+  color: var(--card-foreground);
+  border-radius: var(--radius);
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background 220ms ease;
+}
+.premium-card:hover{
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: var(--shadow-hover);
+  border-color: transparent !important;
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    var(--creative-gradient-1) border-box !important;
+  background-clip: padding-box, border-box !important;
+}
+.premium-card::before{
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient( to bottom, rgba(255,255,255,0.20), rgba(255,255,255,0.04) 40%, transparent 70%);
+  pointer-events: none;
+}
+.premium-card .ant-card-head-title{ color: var(--foreground); font-weight: 700; }
+.premium-card .ant-typography{ color: var(--foreground); }
+
+/* Buttons mapped to gradient tokens */
+.premium-btn.ant-btn{
+  background: var(--creative-gradient-1) !important;
+  border: none !important;
+  color: #fff !important;
+  border-radius: var(--radius);
+  transition: transform 200ms ease, box-shadow 200ms ease, background 260ms ease;
+}
+.premium-btn.ant-btn:hover,
+.premium-btn.ant-btn:focus{
+  transform: scale(1.05);
+  box-shadow: var(--shadow-hover);
+  background: var(--creative-gradient-2) !important;
+}
+
+/* Gradient headline and strong text (hero) */
+.gradient-text{
+  background: linear-gradient(90deg, var(--creative-accent-bright), var(--creative-accent-bright-2), #4ade80);
+  background-clip: text;             /* try standard first */
+  -webkit-background-clip: text;     /* webkit */
+  color: transparent;                /* non-webkit fallback */
+  -webkit-text-fill-color: transparent; /* webkit */
+  font-weight: 800;
+}
+.strong-text{ color: var(--foreground); font-weight: 800; }
+
+/* Outline/secondary CTA button */
+.outline-btn.ant-btn{
+  background: transparent !important;
+  border: 2px solid var(--primary) !important;
+  color: var(--primary) !important;
+  font-weight: 500;
+  border-radius: var(--radius);
+  transition: all 0.25s ease;
+}
+.outline-btn.ant-btn:hover{
+  border-color: var(--creative-accent-bright) !important;
+  color: var(--creative-accent-bright) !important;
+}
+
+/* Hero image (optional if an image is present) */
+.hero-image img{
+  width: 260px; height: 260px; border-radius: 50%;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hero-image img:hover{
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 120, 50, 0.5);
+}
+
+/* About utilities */
+.about-section{ padding: 5rem 2rem; }
+.about-img{ width: 280px; height: 280px; border-radius: 50%; box-shadow: var(--shadow-card); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.about-img:hover{ transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 160, 100, 0.4); }
+
+/* Dark theme radial accents for body and home section */
+/* Scope radial accents to dark mode only */
+.dark body, .dark .home-bg{
+  background:
+    radial-gradient(800px 600px at 20% 20%, rgba(255, 0, 255, 0.05), transparent 60%),
+    radial-gradient(900px 700px at 80% 120%, rgba(0, 255, 200, 0.05), transparent 60%),
+    var(--background);
+  color: var(--foreground);
+}
+
+/* Buttons — outline variant with deep accent */
+.outline-btn.ant-btn{ background: transparent !important; border: 2px solid var(--creative-accent-deep) !important; color: var(--creative-accent-deep) !important; border-radius: var(--radius); transition: all 0.3s ease; }
+.outline-btn.ant-btn:hover{ border-color: var(--creative-accent-bright) !important; color: var(--creative-accent-bright) !important; }
+
+/* Ensure outline buttons are visible in dark mode */
+.dark .outline-btn.ant-btn{
+  background: rgba(255,255,255,0.06) !important;
+  border-color: rgba(255,255,255,0.7) !important;
+  color: #ffffff !important;
+}
+.dark .outline-btn.ant-btn:hover,
+.dark .outline-btn.ant-btn:focus{
+  background: var(--creative-gradient-2) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+}
+
+/* Navbar — make items clearly hoverable like CTA */
+.site-nav .ant-menu-overflow-item,
+.site-nav .ant-menu-item{
+  border-radius: 999px;
+  margin: 0 6px;
+  height: 38px;
+  line-height: 38px;
+  padding: 0 !important;
+}
+.site-nav .ant-menu-item a{
+  color: var(--foreground);
+  font-weight: 600;
+  display: inline-block;
+  width: 120px;          /* uniform width for unison */
+  text-align: center;
+}
+.site-nav .ant-menu-item:hover,
+.site-nav .ant-menu-item-active{
+  background: var(--creative-gradient-1);
+}
+.site-nav .ant-menu-item:hover a,
+.site-nav .ant-menu-item-active a{
+  color: #fff !important;
+}
+
+/* Keep vertical/mobile menu fluid */
+@media (max-width: 768px){
+  .site-nav .ant-menu-item{ height: auto; line-height: 1.2; }
+  .site-nav .ant-menu-item a{ width: 100% !important; text-align: left; padding: 8px 10px; }
+}
+
+/* Theme toggle button (day/night) */
+.theme-toggle{
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 999px;
+  border: 1px solid var(--border); background: rgba(255,255,255,0.75);
+  color: var(--foreground); cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.dark .theme-toggle{ background: rgba(3,2,19,0.35); }
+.theme-toggle:hover{ transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.icon-sun, .icon-moon{ display: block; }
+
+/* Mobile drawer (navbar) background based on theme */
+.site-drawer .ant-drawer-content{ background: rgba(255,255,255,0.96) !important; }
+.site-drawer .ant-drawer-body{ background: transparent !important; }
+.site-drawer .ant-menu{ background: transparent !important; }
+.site-drawer .ant-menu-item a{ color: var(--foreground) !important; font-weight: 600; }
+.site-drawer .ant-menu-item{ margin: 8px 12px; }
+.dark .site-drawer .ant-drawer-content{ background: rgba(3,2,19,0.88) !important; }
+
+/* Hero — centered composition like the mockup */
+.hero{ position: relative; text-align: center; display: grid; place-items: center; gap: 14px; }
+.hero::before{
+  content: ""; position: absolute; inset: -60px -20% auto -20%; height: 320px; z-index: -1;
+  background: radial-gradient(600px 300px at 20% 30%, rgba(3,2,19,0.06), transparent 60%),
+              radial-gradient(700px 340px at 80% 10%, rgba(3,2,19,0.05), transparent 60%);
+}
+.hero-badge{ padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--foreground); background: rgba(255,255,255,0.6); backdrop-filter: blur(6px); font-weight: 600; }
+.dark .hero-badge{ background: rgba(3,2,19,0.35); }
+.hero-name{ line-height: 0.95; margin-top: 6px; }
+.hero-first{ display: block; font-size: clamp(48px, 7vw, 96px); font-weight: 800; letter-spacing: 0.3px; }
+.hero-last{ display: block; font-size: clamp(56px, 9vw, 120px); font-weight: 900; color: var(--foreground); }
+.hero-underline{ width: 140px; height: 6px; background: var(--accent-mustard); border: none; border-radius: 6px; margin: 6px 0 0; }
+.hero-title{ margin: 0; color: var(--foreground) !important; }
+.hero-sub{ color: var(--creative-accent-bright); font-weight: 600; display: block; margin-top: 4px; }
+.hero-focus{ margin: 0; font-weight: 800 !important; }
+.hero-tagline{ max-width: 760px; color: var(--muted-foreground); margin: 8px auto 0; font-size: 18px; }
+.hero-ctas{ display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+.hero-portrait{ margin-top: 12px; filter: drop-shadow(0 16px 30px rgba(0,0,0,0.25)); }
+.hero-down{ display: inline-block; width: 44px; height: 44px; line-height: 44px; border-radius: 50%; border: 1px solid var(--border); color: var(--foreground); text-decoration: none; margin-top: 8px; transition: transform .2s ease; }
+.hero-down:hover{ transform: translateY(3px); }
+
+/* Social icons */
+.hero-socials{ display: flex; gap: 10px; justify-content: center; margin-top: 8px; }
+.social-btn{ display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); color: var(--foreground); background: #fff; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+.dark .social-btn{ background: rgba(3,2,19,0.25); }
+.social-btn:hover{ transform: translateY(-2px); box-shadow: var(--shadow-hover); background: var(--creative-gradient-1); color: #fff; }
+
+/* About section styles */
+.about-header{ text-align: center; margin-bottom: 28px; }
+.about-lede{ max-width: 820px; margin: 8px auto 0; color: var(--muted-foreground); font-size: 18px; }
+.about-text{ color: var(--muted-foreground); text-align: justify; }
+.values-grid{ display: grid; grid-template-columns: 1fr; gap: 12px; grid-auto-rows: 1fr; }
+@media (min-width: 640px){ .values-grid{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
+.values-grid .xp-card{ height: 100%; min-height: 150px; display: flex; flex-direction: column; justify-content: flex-start; margin: 0 !important; }
+.values-grid .ant-typography{ color: var(--foreground); margin-bottom: 0; }
+.dark .values-grid .ant-typography{ color: var(--card-foreground); }
+.xp-card{ background: var(--card) !important; border: 1px solid var(--border) !important; border-radius: 16px !important; box-shadow: var(--shadow-card); }
+.experience-list{ display: grid; gap: 12px; grid-auto-rows: 1fr; }
+.xp-header{ display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.xp-company{ color: var(--muted-foreground); font-size: 14px; margin-top: 2px; }
+.xp-date{ font-size: 12px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted-foreground); background: rgba(255,255,255,0.5); }
+.dark .xp-date{ background: rgba(3,2,19,0.25); }
+.xp-desc{ margin: 0; color: var(--muted-foreground); }
+.value-chip{ border-radius: 999px; border-color: rgba(3,2,19,0.08); background: #f6faf9; color: var(--foreground); margin-bottom: 6px; }
+.dark .value-chip{ background: rgba(3,2,19,0.3); border-color: var(--border); color: var(--card-foreground); }
+
+/* Section vignette + subtle divider */
+.section-vignette{ position: relative; }
+.section-vignette::before{
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 120px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(3,2,19,0.06), rgba(3,2,19,0.0));
+}
+.dark .section-vignette::before{ background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.0)); }
+.soft-divider{ width: 120px; height: 6px; margin: 0 auto 12px; border-radius: 6px; background: linear-gradient(90deg, var(--creative-accent-bright), var(--creative-accent-bright-2)); opacity: 0.8; }
+
+/* About columns equal height */
+.about-row{ align-items: stretch !important; }
+.about-col{ display: flex; flex-direction: column; height: 100%; }
+
+/* New About 2x2 grid layout */
+.about-grid{ display: grid; gap: 24px; grid-template-columns: 1.1fr 1fr; grid-template-areas:
+  "story exp"
+  "values exp";
+}
+.about-story{ grid-area: story; }
+.about-values{ grid-area: values; align-self: end; }
+.about-experience{ grid-area: exp; align-self: end; display: flex; flex-direction: column; }
+@media (max-width: 992px){
+  .about-grid{ grid-template-columns: 1fr; grid-template-areas: "story" "values" "exp"; }
+  .about-values, .about-experience{ align-self: stretch; }
+}
+
+/* Contact section */
+.contact-row{ align-items: stretch !important; }
+.contact-left{ display: flex; flex-direction: column; height: 100%; }
+.contact-left .info-list{ display: grid; gap: 12px; }
+.info-row{ display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: rgba(3,2,19,0.02); transition: transform .2s ease, box-shadow .2s ease, background .25s ease, border-color .25s ease; text-decoration: none; }
+.info-row:hover{ transform: translateY(-2px); box-shadow: var(--shadow-hover); background: linear-gradient(var(--card), var(--card)) padding-box, var(--creative-gradient-1) border-box; border-color: transparent; }
+.dark .info-row{ background: rgba(255,255,255,0.04); }
+.info-icon{ width: 40px; height: 40px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: rgba(3,2,19,0.06); }
+.dark .info-icon{ background: rgba(255,255,255,0.08); }
+.muted{ color: var(--muted-foreground); }
+.contact-socials{ display: flex; gap: 10px; }
+.contact-availability{ background: linear-gradient(180deg, rgba(3,2,19,0.03), transparent) !important; margin-top: auto; }
+.contact-card .ant-card-head-title{ color: var(--foreground); }
+.contact-form-wrap{ display: flex; flex-direction: column; height: 100%; justify-content: flex-end; }
+
+/* Visibility fixes for dark mode titles */
+.about-values > .ant-typography, .about-values h4 { color: var(--foreground) !important; }
+#contact .about-header .ant-typography { color: var(--foreground) !important; }
+#contact .about-header .about-lede { color: var(--muted-foreground) !important; }
+
+/* Form fields in dark mode */
+.dark .ant-form-item-label > label { color: var(--card-foreground) !important; }
+.dark .ant-input, .dark textarea.ant-input, .dark .ant-input-affix-wrapper {
+  background: rgba(255,255,255,0.08) !important;
+  color: var(--card-foreground) !important;
+  border-color: var(--border) !important;
+}
+.dark .ant-input::placeholder, .dark textarea.ant-input::placeholder { color: rgba(255,255,255,0.65) !important; }
+
+/* Ensure light mode inputs are light */
+html:not(.dark) .ant-input,
+html:not(.dark) textarea.ant-input,
+html:not(.dark) .ant-input-affix-wrapper{
+  background: #f2f3f5 !important;
+  color: var(--foreground) !important;
+  border-color: #e5e7eb !important;
+}
+html:not(.dark) .ant-input::placeholder,
+html:not(.dark) textarea.ant-input::placeholder{ color: rgba(0,0,0,0.6) !important; }
+
+/* Dark mode visibility for contact details */
+.dark .contact-left strong,
+.dark .contact-left .ant-typography{ color: var(--card-foreground) !important; }
+.dark .muted{ color: rgba(255,255,255,0.78) !important; }
+.contact-availability .ant-typography{ color: var(--foreground); }
+.dark .contact-availability .ant-typography{ color: var(--card-foreground); }
+.contact-availability li{ color: var(--muted-foreground); }
+.dark .contact-availability li{ color: rgba(255,255,255,0.78); }
+
+/* Navbar green pill hover/active (curved) */
+.site-nav .ant-menu-item{ border-radius: 999px !important; }
+.site-nav .ant-menu-item::after{ display: none !important; }
+.site-nav .ant-menu-item:hover,
+.site-nav .ant-menu-item-active,
+.site-nav .ant-menu-item-selected{
+  background: linear-gradient(90deg, #10b981, #16a34a) !important;
+}
+.site-nav .ant-menu-item:hover a,
+.site-nav .ant-menu-item-active a,
+.site-nav .ant-menu-item-selected a{
+  color: #fff !important;
+}
+
+/* Skills & Expertise */
+.skill-card{ --bar-color: #ff7a00; }
+.skill-card.tint{ background: linear-gradient(180deg, rgba(3,2,19,0.03), transparent) !important; }
+.skill-head{ display: flex; align-items: center; gap: 10px; font-size: 16px; margin-bottom: 8px; color: var(--foreground); }
+.skill-icon{ display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 999px; background: rgba(3,2,19,0.06); }
+.dark .skill-icon{ background: rgba(255,255,255,0.08); }
+.skill-list{ display: grid; gap: 10px; }
+.skill-row{ display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; column-gap: 10px; row-gap: 6px; align-items: center; }
+.skill-row > span:first-child{ grid-column: 1 / 2; grid-row: 1; font-weight: 500; color: var(--foreground); }
+.skill-pct{ grid-column: 2 / 3; grid-row: 1; color: var(--muted-foreground); font-size: 12px; }
+.skill-track{ grid-column: 1 / 3; grid-row: 2; height: 8px; border-radius: 999px; background: rgba(3,2,19,0.08); overflow: hidden; position: relative; }
+.dark .skill-track{ background: rgba(255,255,255,0.12); }
+.skill-fill{ position: absolute; inset: 0 auto 0 0; width: 0; background: var(--bar-color); background-image: linear-gradient(90deg, var(--bar-color), rgba(255,255,255,0.2)); border-radius: 999px; }
+
+.tools-grid{ display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.tool-chip{
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.6);
+  color: var(--foreground);
+  transition: transform .2s ease, box-shadow .2s ease, background .25s ease, color .2s ease, border-color .2s ease;
+}
+.dark .tool-chip{ background: rgba(3,2,19,0.35); color: var(--card-foreground); }
+.tool-chip:hover,
+.tool-chip:focus{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  background: var(--creative-gradient-1);
+  color: #ffffff;
+  border-color: transparent;
+}
+.tool-chip:focus-visible{ outline: 2px solid var(--creative-accent-bright); outline-offset: 2px; }
+
+/* Project filter chips */
+.filter-bar{ display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 16px; }
+.filter-chip{ padding: 8px 12px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.6); color: var(--foreground); cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, background .25s ease, color .2s ease, border-color .2s ease; }
+.dark .filter-chip{ background: rgba(3,2,19,0.35); color: var(--card-foreground); }
+.filter-chip:hover{ transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.filter-chip.active{ background: var(--creative-gradient-1); color: #fff; border-color: transparent; }
