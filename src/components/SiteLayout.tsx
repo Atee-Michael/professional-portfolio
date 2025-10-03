@@ -10,10 +10,9 @@ const { useBreakpoint } = Grid;
 const navItems = [
   { key: "home", label: <Link href="/">Home</Link> },
   { key: "about", label: <Link href="/about">About</Link> },
-  { key: "skills", label: <Link href="/skills">Skills</Link> },
+  { key: "skills", label: <Link href="/#skills">Skills</Link> },
   { key: "projects", label: <Link href="/projects">Projects</Link> },
-  { key: "security", label: <Link href="/security">Security</Link> },
-  { key: "contact", label: <Link href="/contact">Contact</Link> },
+  { key: "contact", label: <Link href="/#contact">Contact</Link> },
 ];
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
