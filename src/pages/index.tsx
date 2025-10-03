@@ -164,6 +164,246 @@ export default function Home() {
           </Row>
         </div>
       </section>
+
+      {/* Skills & Expertise */}
+      <section id="skills" className="section">
+        <div className="container">
+          <div className="about-header">
+            <Title level={2} style={{ marginTop: 0 }}>Skills & Expertise</Title>
+            <Paragraph className="about-lede">
+              A comprehensive skill set spanning the full development lifecycle — from discovery and design to implementation and operations.
+            </Paragraph>
+          </div>
+
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={8}>
+              <Card className="xp-card skill-card" bodyStyle={{ padding: 18 }} style={{ ['--bar-color' as any]: '#14b8a6' }}>
+                <div className="skill-head">
+                  <span className="skill-icon">🛡️</span>
+                  <strong>Cybersecurity</strong>
+                </div>
+                <div className="skill-list">
+                  {[
+                    ["Threat Modeling", 90],
+                    ["OWASP Top 10", 92],
+                    ["Secure SDLC", 88],
+                    ["Vulnerability Management", 86],
+                  ].map(([label, pct]) => (
+                    <div className="skill-row" key={String(label)}>
+                      <span>{label as string}</span>
+                      <div className="skill-track"><div className="skill-fill" style={{ width: pct + "%" }} /></div>
+                      <span className="skill-pct">{pct as number}%</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </Col>
+
+            <Col xs={24} md={8}>
+              <Card className="xp-card skill-card" bodyStyle={{ padding: 18 }} style={{ ['--bar-color' as any]: '#22c55e' }}>
+                <div className="skill-head">
+                  <span className="skill-icon">🛜</span>
+                  <strong>Networking</strong>
+                </div>
+                <div className="skill-list">
+                  {[
+                    ["TCP/IP", 92],
+                    ["Routing & Switching", 85],
+                    ["Firewalls/VPN", 86],
+                    ["DNS/DHCP", 90],
+                  ].map(([label, pct]) => (
+                    <div className="skill-row" key={String(label)}>
+                      <span>{label as string}</span>
+                      <div className="skill-track"><div className="skill-fill" style={{ width: pct + "%" }} /></div>
+                      <span className="skill-pct">{pct as number}%</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </Col>
+
+            <Col xs={24} md={8}>
+              <Card className="xp-card skill-card" bodyStyle={{ padding: 18 }} style={{ ['--bar-color' as any]: '#ef4444' }}>
+                <div className="skill-head">
+                  <span className="skill-icon">🏗️</span>
+                  <strong>Systems Design</strong>
+                </div>
+                <div className="skill-list">
+                  {[
+                    ["Microservices", 88],
+                    ["Event-Driven", 84],
+                    ["Caching & CDN", 86],
+                    ["Observability", 82],
+                  ].map(([label, pct]) => (
+                    <div className="skill-row" key={String(label)}>
+                      <span>{label as string}</span>
+                      <div className="skill-track"><div className="skill-fill" style={{ width: pct + "%" }} /></div>
+                      <span className="skill-pct">{pct as number}%</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </Col>
+          </Row>
+
+          <div style={{ height: 16 }} />
+
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={8}>
+              <Card className="xp-card skill-card" bodyStyle={{ padding: 18 }} style={{ ['--bar-color' as any]: '#ff7a00' }}>
+                <div className="skill-head">
+                  <span className="skill-icon">&lt;/&gt;</span>
+                  <strong>Frontend Development</strong>
+                </div>
+                <div className="skill-list">
+                  {[
+                    ["React/Next.js", 95],
+                    ["TypeScript", 90],
+                    ["Tailwind/Ant Design", 92],
+                    ["Vue.js", 80],
+                  ].map(([label, pct]) => (
+                    <div className="skill-row" key={String(label)}>
+                      <span>{label as string}</span>
+                      <div className="skill-track"><div className="skill-fill" style={{ width: pct + "%" }} /></div>
+                      <span className="skill-pct">{pct as number}%</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </Col>
+
+            <Col xs={24} md={8}>
+              <Card className="xp-card skill-card tint" bodyStyle={{ padding: 18 }} style={{ ['--bar-color' as any]: '#4aa8ff' }}>
+                <div className="skill-head">
+                  <span className="skill-icon">🗄️</span>
+                  <strong>Backend Development</strong>
+                </div>
+                <div className="skill-list">
+                  {[
+                    ["Node.js", 90],
+                    ["Python", 85],
+                    ["PostgreSQL", 88],
+                    ["MongoDB", 82],
+                  ].map(([label, pct]) => (
+                    <div className="skill-row" key={String(label)}>
+                      <span>{label as string}</span>
+                      <div className="skill-track"><div className="skill-fill" style={{ width: pct + "%" }} /></div>
+                      <span className="skill-pct">{pct as number}%</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </Col>
+
+            <Col xs={24} md={8}>
+              <Card className="xp-card skill-card" bodyStyle={{ padding: 18 }} style={{ ['--bar-color' as any]: '#06b6d4' }}>
+                <div className="skill-head">
+                  <span className="skill-icon">☁️</span>
+                  <strong>Cloud & DevOps</strong>
+                </div>
+                <div className="skill-list">
+                  {[
+                    ["AWS", 85],
+                    ["Docker", 82],
+                    ["CI/CD", 88],
+                    ["Kubernetes", 75],
+                  ].map(([label, pct]) => (
+                    <div className="skill-row" key={String(label)}>
+                      <span>{label as string}</span>
+                      <div className="skill-track"><div className="skill-fill" style={{ width: pct + "%" }} /></div>
+                      <span className="skill-pct">{pct as number}%</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </Col>
+          </Row>
+
+          <div style={{ height: 16 }} />
+
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={8}>
+              <Card className="xp-card skill-card" bodyStyle={{ padding: 18 }} style={{ ['--bar-color' as any]: '#f59e0b' }}>
+                <div className="skill-head">
+                  <span className="skill-icon">🎨</span>
+                  <strong>UI/UX Design</strong>
+                </div>
+                <div className="skill-list">
+                  {[
+                    ["Figma", 92],
+                    ["Prototyping", 90],
+                    ["Design Systems", 88],
+                    ["User Research", 78],
+                  ].map(([label, pct]) => (
+                    <div className="skill-row" key={String(label)}>
+                      <span>{label as string}</span>
+                      <div className="skill-track"><div className="skill-fill" style={{ width: pct + "%" }} /></div>
+                      <span className="skill-pct">{pct as number}%</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </Col>
+
+            <Col xs={24} md={8}>
+              <Card className="xp-card skill-card tint" bodyStyle={{ padding: 18 }} style={{ ['--bar-color' as any]: '#8b5cf6' }}>
+                <div className="skill-head">
+                  <span className="skill-icon">🌐</span>
+                  <strong>Web Technologies</strong>
+                </div>
+                <div className="skill-list">
+                  {[
+                    ["GraphQL", 87],
+                    ["REST APIs", 95],
+                    ["WebSocket", 80],
+                    ["Service Workers", 83],
+                  ].map(([label, pct]) => (
+                    <div className="skill-row" key={String(label)}>
+                      <span>{label as string}</span>
+                      <div className="skill-track"><div className="skill-fill" style={{ width: pct + "%" }} /></div>
+                      <span className="skill-pct">{pct as number}%</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </Col>
+
+            <Col xs={24} md={8}>
+              <Card className="xp-card skill-card" bodyStyle={{ padding: 18 }} style={{ ['--bar-color' as any]: '#84cc16' }}>
+                <div className="skill-head">
+                  <span className="skill-icon">✅</span>
+                  <strong>Testing & Quality</strong>
+                </div>
+                <div className="skill-list">
+                  {[
+                    ["Unit/Integration", 90],
+                    ["E2E (Playwright)", 85],
+                    ["Performance", 82],
+                    ["Security Testing", 88],
+                  ].map(([label, pct]) => (
+                    <div className="skill-row" key={String(label)}>
+                      <span>{label as string}</span>
+                      <div className="skill-track"><div className="skill-fill" style={{ width: pct + "%" }} /></div>
+                      <span className="skill-pct">{pct as number}%</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </Col>
+          </Row>
+
+          <div style={{ height: 20 }} />
+
+          <div className="about-header">
+            <Title level={3} style={{ marginTop: 0 }}>Tools & Technologies</Title>
+          </div>
+          <div className="tools-grid">
+            {["VS Code", "GitHub", "Postman", "Vercel", "Supabase", "Stripe", "Framer", "Linear", "Slack", "Notion", "Jira", "Firebase"].map(tool => (
+              <span className="tool-chip" key={tool}>{tool}</span>
+            ))}
+          </div>
+        </div>
+      </section>
     </>
   );
 }

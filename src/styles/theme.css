@@ -193,3 +193,37 @@
 .xp-desc{ margin: 0; color: var(--muted-foreground); }
 .value-chip{ border-radius: 999px; border-color: rgba(3,2,19,0.08); background: #f6faf9; color: var(--foreground); margin-bottom: 6px; }
 .dark .value-chip{ background: rgba(3,2,19,0.3); border-color: var(--border); color: var(--card-foreground); }
+
+/* Skills & Expertise */
+.skill-card{ --bar-color: #ff7a00; }
+.skill-card.tint{ background: linear-gradient(180deg, rgba(3,2,19,0.03), transparent) !important; }
+.skill-head{ display: flex; align-items: center; gap: 10px; font-size: 16px; margin-bottom: 8px; color: var(--foreground); }
+.skill-icon{ display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 999px; background: rgba(3,2,19,0.06); }
+.dark .skill-icon{ background: rgba(255,255,255,0.08); }
+.skill-list{ display: grid; gap: 10px; }
+.skill-row{ display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; column-gap: 10px; row-gap: 6px; align-items: center; }
+.skill-row > span:first-child{ grid-column: 1 / 2; grid-row: 1; font-weight: 500; color: var(--foreground); }
+.skill-pct{ grid-column: 2 / 3; grid-row: 1; color: var(--muted-foreground); font-size: 12px; }
+.skill-track{ grid-column: 1 / 3; grid-row: 2; height: 8px; border-radius: 999px; background: rgba(3,2,19,0.08); overflow: hidden; position: relative; }
+.dark .skill-track{ background: rgba(255,255,255,0.12); }
+.skill-fill{ position: absolute; inset: 0 auto 0 0; width: 0; background: var(--bar-color); background-image: linear-gradient(90deg, var(--bar-color), rgba(255,255,255,0.2)); border-radius: 999px; }
+
+.tools-grid{ display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.tool-chip{
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.6);
+  color: var(--foreground);
+  transition: transform .2s ease, box-shadow .2s ease, background .25s ease, color .2s ease, border-color .2s ease;
+}
+.dark .tool-chip{ background: rgba(3,2,19,0.35); color: var(--card-foreground); }
+.tool-chip:hover,
+.tool-chip:focus{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  background: var(--creative-gradient-1);
+  color: #ffffff;
+  border-color: transparent;
+}
+.tool-chip:focus-visible{ outline: 2px solid var(--creative-accent-bright); outline-offset: 2px; }
