@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Layout, Menu, Grid } from "antd";
 import { ReactNode } from "react";
+import dynamic from "next/dynamic";
+const ThemeToggle = dynamic(() => import("./ThemeToggle"), { ssr: false });
 
 const { Header, Content, Footer } = Layout;
 const { useBreakpoint } = Grid;
@@ -33,6 +35,9 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
             style={{ background: "transparent", borderBottom: "none" }}
             className="site-nav"
           />
+          <div style={{ marginLeft: 8 }}>
+            <ThemeToggle />
+          </div>
         </div>
       </Header>
 

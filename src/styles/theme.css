@@ -107,6 +107,19 @@
 .outline-btn.ant-btn{ background: transparent !important; border: 2px solid var(--creative-accent-deep) !important; color: var(--creative-accent-deep) !important; border-radius: var(--radius); transition: all 0.3s ease; }
 .outline-btn.ant-btn:hover{ border-color: var(--creative-accent-bright) !important; color: var(--creative-accent-bright) !important; }
 
+/* Ensure outline buttons are visible in dark mode */
+.dark .outline-btn.ant-btn{
+  background: rgba(255,255,255,0.06) !important;
+  border-color: rgba(255,255,255,0.7) !important;
+  color: #ffffff !important;
+}
+.dark .outline-btn.ant-btn:hover,
+.dark .outline-btn.ant-btn:focus{
+  background: var(--creative-gradient-2) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+}
+
 /* Navbar — make items clearly hoverable like CTA */
 .site-nav .ant-menu-overflow-item,
 .site-nav .ant-menu-item{
@@ -122,6 +135,17 @@
 .site-nav .ant-menu-item-active a{
   color: #fff !important;
 }
+
+/* Theme toggle button (day/night) */
+.theme-toggle{
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 999px;
+  border: 1px solid var(--border); background: rgba(255,255,255,0.75);
+  color: var(--foreground); cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.dark .theme-toggle{ background: rgba(3,2,19,0.35); }
+.theme-toggle:hover{ transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.icon-sun, .icon-moon{ display: block; }
 
 /* Hero — centered composition like the mockup */
 .hero{ position: relative; text-align: center; display: grid; place-items: center; gap: 14px; }
