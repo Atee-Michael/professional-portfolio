@@ -220,6 +220,16 @@
   .about-values, .about-experience{ align-self: stretch; }
 }
 
+/* Contact section */
+.contact-left .info-list{ display: grid; gap: 12px; }
+.info-row{ display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: center; }
+.info-icon{ width: 40px; height: 40px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: rgba(3,2,19,0.06); }
+.dark .info-icon{ background: rgba(255,255,255,0.08); }
+.muted{ color: var(--muted-foreground); }
+.contact-socials{ display: flex; gap: 10px; }
+.contact-availability{ background: linear-gradient(180deg, rgba(3,2,19,0.03), transparent) !important; }
+.contact-card .ant-card-head-title{ color: var(--foreground); }
+
 /* Skills & Expertise */
 .skill-card{ --bar-color: #ff7a00; }
 .skill-card.tint{ background: linear-gradient(180deg, rgba(3,2,19,0.03), transparent) !important; }

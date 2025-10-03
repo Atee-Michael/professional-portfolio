@@ -1,4 +1,4 @@
-import { Typography, Button, Row, Col, Card, Tag } from "antd";
+import { Typography, Button, Row, Col, Card, Tag, Form, Input } from "antd";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
@@ -469,6 +469,108 @@ export default function Home() {
               View All Projects
             </Button>
           </div>
+        </motion.div>
+      </section>
+
+      {/* Contact */}
+      <section id="contact" className="section">
+        <motion.div className="container" variants={container} initial="hidden" animate="show">
+          <div className="about-header">
+            <Title level={2} style={{ marginTop: 0 }}>Let’s Work Together</Title>
+            <Paragraph className="about-lede">I’m open to new opportunities, collaborations, or a friendly chat.</Paragraph>
+          </div>
+
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={12}>
+              <motion.div variants={up} className="contact-left">
+                <Title level={3} style={{ marginTop: 0 }}>Get In Touch</Title>
+                <div className="info-list">
+                  <div className="info-row">
+                    <span className="info-icon">✉️</span>
+                    <div>
+                      <strong>Email</strong>
+                      <div className="muted">hello@example.com</div>
+                    </div>
+                  </div>
+                  <div className="info-row">
+                    <span className="info-icon">📞</span>
+                    <div>
+                      <strong>Phone</strong>
+                      <div className="muted">+1 (555) 123-4567</div>
+                    </div>
+                  </div>
+                  <div className="info-row">
+                    <span className="info-icon">📍</span>
+                    <div>
+                      <strong>Location</strong>
+                      <div className="muted">Canterbury, UK</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ height: 12 }} />
+
+                <div>
+                  <Title level={4} style={{ marginTop: 0 }}>Follow Me</Title>
+                  <div className="contact-socials">
+                    <a className="social-btn" href="https://github.com/" target="_blank" rel="noreferrer" aria-label="GitHub">G</a>
+                    <a className="social-btn" href="https://www.linkedin.com/" target="_blank" rel="noreferrer" aria-label="LinkedIn">in</a>
+                    <a className="social-btn" href="https://twitter.com/" target="_blank" rel="noreferrer" aria-label="Twitter">t</a>
+                  </div>
+                </div>
+
+                <div style={{ height: 12 }} />
+
+                <Card className="xp-card contact-availability" bodyStyle={{ padding: 16 }}>
+                  <Title level={4} style={{ margin: "0 0 8px" }}>Available for</Title>
+                  <ul className="muted" style={{ margin: 0, paddingLeft: 18 }}>
+                    <li>Full‑time opportunities</li>
+                    <li>Freelance projects</li>
+                    <li>Consulting work</li>
+                    <li>Speaking engagements</li>
+                  </ul>
+                </Card>
+              </motion.div>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <motion.div variants={up}>
+                <Card className="xp-card contact-card" title={<strong>Send a Message</strong>}>
+                  <Form
+                    layout="vertical"
+                    onFinish={(v) => {
+                      const mail = `mailto:hello@example.com?subject=${encodeURIComponent(v.subject || "Portfolio Contact")}&body=${encodeURIComponent(`${v.name} <${v.email}>
+
+${v.message || ""}`)}`;
+                      window.location.href = mail;
+                    }}
+                  >
+                    <Row gutter={12}>
+                      <Col span={12}>
+                        <Form.Item name="name" label="Name">
+                          <Input placeholder="Your name" />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item name="email" label="Email">
+                          <Input type="email" placeholder="your@email.com" />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Form.Item name="subject" label="Subject">
+                      <Input placeholder="What’s this about?" />
+                    </Form.Item>
+                    <Form.Item name="message" label="Message">
+                      <Input.TextArea rows={5} placeholder="Tell me about your project or just say hello…" />
+                    </Form.Item>
+                    <Button htmlType="submit" size="large" className="premium-btn" block>
+                      Send Message
+                    </Button>
+                  </Form>
+                </Card>
+              </motion.div>
+            </Col>
+          </Row>
         </motion.div>
       </section>
     </>
