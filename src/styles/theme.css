@@ -124,9 +124,18 @@
 .site-nav .ant-menu-overflow-item,
 .site-nav .ant-menu-item{
   border-radius: 999px;
-  margin: 0 4px;
+  margin: 0 6px;
+  height: 38px;
+  line-height: 38px;
+  padding: 0 !important;
 }
-.site-nav .ant-menu-item a{ color: var(--foreground); font-weight: 500; }
+.site-nav .ant-menu-item a{
+  color: var(--foreground);
+  font-weight: 600;
+  display: inline-block;
+  width: 120px;          /* uniform width for unison */
+  text-align: center;
+}
 .site-nav .ant-menu-item:hover,
 .site-nav .ant-menu-item-active{
   background: var(--creative-gradient-1);
@@ -134,6 +143,12 @@
 .site-nav .ant-menu-item:hover a,
 .site-nav .ant-menu-item-active a{
   color: #fff !important;
+}
+
+/* Keep vertical/mobile menu fluid */
+@media (max-width: 768px){
+  .site-nav .ant-menu-item{ height: auto; line-height: 1.2; }
+  .site-nav .ant-menu-item a{ width: 100% !important; text-align: left; padding: 8px 10px; }
 }
 
 /* Theme toggle button (day/night) */
@@ -146,6 +161,14 @@
 .dark .theme-toggle{ background: rgba(3,2,19,0.35); }
 .theme-toggle:hover{ transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 .icon-sun, .icon-moon{ display: block; }
+
+/* Mobile drawer (navbar) background based on theme */
+.site-drawer .ant-drawer-content{ background: rgba(255,255,255,0.96) !important; }
+.site-drawer .ant-drawer-body{ background: transparent !important; }
+.site-drawer .ant-menu{ background: transparent !important; }
+.site-drawer .ant-menu-item a{ color: var(--foreground) !important; font-weight: 600; }
+.site-drawer .ant-menu-item{ margin: 8px 12px; }
+.dark .site-drawer .ant-drawer-content{ background: rgba(3,2,19,0.88) !important; }
 
 /* Hero — centered composition like the mockup */
 .hero{ position: relative; text-align: center; display: grid; place-items: center; gap: 14px; }
@@ -221,14 +244,67 @@
 }
 
 /* Contact section */
+.contact-row{ align-items: stretch !important; }
+.contact-left{ display: flex; flex-direction: column; height: 100%; }
 .contact-left .info-list{ display: grid; gap: 12px; }
-.info-row{ display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: center; }
+.info-row{ display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: rgba(3,2,19,0.02); transition: transform .2s ease, box-shadow .2s ease, background .25s ease, border-color .25s ease; text-decoration: none; }
+.info-row:hover{ transform: translateY(-2px); box-shadow: var(--shadow-hover); background: linear-gradient(var(--card), var(--card)) padding-box, var(--creative-gradient-1) border-box; border-color: transparent; }
+.dark .info-row{ background: rgba(255,255,255,0.04); }
 .info-icon{ width: 40px; height: 40px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: rgba(3,2,19,0.06); }
 .dark .info-icon{ background: rgba(255,255,255,0.08); }
 .muted{ color: var(--muted-foreground); }
 .contact-socials{ display: flex; gap: 10px; }
-.contact-availability{ background: linear-gradient(180deg, rgba(3,2,19,0.03), transparent) !important; }
+.contact-availability{ background: linear-gradient(180deg, rgba(3,2,19,0.03), transparent) !important; margin-top: auto; }
 .contact-card .ant-card-head-title{ color: var(--foreground); }
+.contact-form-wrap{ display: flex; flex-direction: column; height: 100%; justify-content: flex-end; }
+
+/* Visibility fixes for dark mode titles */
+.about-values > .ant-typography, .about-values h4 { color: var(--foreground) !important; }
+#contact .about-header .ant-typography { color: var(--foreground) !important; }
+#contact .about-header .about-lede { color: var(--muted-foreground) !important; }
+
+/* Form fields in dark mode */
+.dark .ant-form-item-label > label { color: var(--card-foreground) !important; }
+.dark .ant-input, .dark textarea.ant-input, .dark .ant-input-affix-wrapper {
+  background: rgba(255,255,255,0.08) !important;
+  color: var(--card-foreground) !important;
+  border-color: var(--border) !important;
+}
+.dark .ant-input::placeholder, .dark textarea.ant-input::placeholder { color: rgba(255,255,255,0.65) !important; }
+
+/* Ensure light mode inputs are light */
+html:not(.dark) .ant-input,
+html:not(.dark) textarea.ant-input,
+html:not(.dark) .ant-input-affix-wrapper{
+  background: #f2f3f5 !important;
+  color: var(--foreground) !important;
+  border-color: #e5e7eb !important;
+}
+html:not(.dark) .ant-input::placeholder,
+html:not(.dark) textarea.ant-input::placeholder{ color: rgba(0,0,0,0.6) !important; }
+
+/* Dark mode visibility for contact details */
+.dark .contact-left strong,
+.dark .contact-left .ant-typography{ color: var(--card-foreground) !important; }
+.dark .muted{ color: rgba(255,255,255,0.78) !important; }
+.contact-availability .ant-typography{ color: var(--foreground); }
+.dark .contact-availability .ant-typography{ color: var(--card-foreground); }
+.contact-availability li{ color: var(--muted-foreground); }
+.dark .contact-availability li{ color: rgba(255,255,255,0.78); }
+
+/* Navbar green pill hover/active (curved) */
+.site-nav .ant-menu-item{ border-radius: 999px !important; }
+.site-nav .ant-menu-item::after{ display: none !important; }
+.site-nav .ant-menu-item:hover,
+.site-nav .ant-menu-item-active,
+.site-nav .ant-menu-item-selected{
+  background: linear-gradient(90deg, #10b981, #16a34a) !important;
+}
+.site-nav .ant-menu-item:hover a,
+.site-nav .ant-menu-item-active a,
+.site-nav .ant-menu-item-selected a{
+  color: #fff !important;
+}
 
 /* Skills & Expertise */
 .skill-card{ --bar-color: #ff7a00; }

@@ -1,4 +1,4 @@
-import { Typography, Button, Row, Col, Card, Tag, Form, Input } from "antd";
+import { Typography, Button, Row, Col, Card, Tag, Form, Input, message } from "antd";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
@@ -480,32 +480,32 @@ export default function Home() {
             <Paragraph className="about-lede">I’m open to new opportunities, collaborations, or a friendly chat.</Paragraph>
           </div>
 
-          <Row gutter={[24, 24]}>
+          <Row gutter={[24, 24]} className="contact-row">
             <Col xs={24} md={12}>
               <motion.div variants={up} className="contact-left">
                 <Title level={3} style={{ marginTop: 0 }}>Get In Touch</Title>
                 <div className="info-list">
-                  <div className="info-row">
+                  <a className="info-row clickable" href="mailto:hello@example.com" aria-label="Email">
                     <span className="info-icon">✉️</span>
                     <div>
                       <strong>Email</strong>
                       <div className="muted">hello@example.com</div>
                     </div>
-                  </div>
-                  <div className="info-row">
+                  </a>
+                  <a className="info-row clickable" href="tel:+15551234567" aria-label="Phone">
                     <span className="info-icon">📞</span>
                     <div>
                       <strong>Phone</strong>
                       <div className="muted">+1 (555) 123-4567</div>
                     </div>
-                  </div>
-                  <div className="info-row">
+                  </a>
+                  <a className="info-row clickable" href="https://maps.google.com/?q=Canterbury,UK" target="_blank" rel="noreferrer" aria-label="Location">
                     <span className="info-icon">📍</span>
                     <div>
                       <strong>Location</strong>
                       <div className="muted">Canterbury, UK</div>
                     </div>
-                  </div>
+                  </a>
                 </div>
 
                 <div style={{ height: 12 }} />
@@ -534,14 +534,19 @@ export default function Home() {
             </Col>
 
             <Col xs={24} md={12}>
-              <motion.div variants={up}>
+              <motion.div variants={up} className="contact-form-wrap">
                 <Card className="xp-card contact-card" title={<strong>Send a Message</strong>}>
                   <Form
                     layout="vertical"
                     onFinish={(v) => {
-                      const mail = `mailto:hello@example.com?subject=${encodeURIComponent(v.subject || "Portfolio Contact")}&body=${encodeURIComponent(`${v.name} <${v.email}>
-
-${v.message || ""}`)}`;
+                      const sanitize = (s: string) => (s || "").toString().replace(/[\r\n%0a%0d]/gi, " ").slice(0, 500);
+                      const email = (v.email || "").toString().trim();
+                      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                      if (!emailOk) { message.error("Please provide a valid email"); return; }
+                      const name = sanitize(v.name);
+                      const subject = sanitize(v.subject || "Portfolio Contact");
+                      const body = sanitize(v.message);
+                      const mail = `mailto:hello@example.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`${name} <${email}>\n\n${body}`)}`;
                       window.location.href = mail;
                     }}
                   >
