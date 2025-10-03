@@ -57,6 +57,15 @@ export default function AboutPage() {
           <motion.div variants={item} style={{ marginTop: 12 }}>
             <Portrait />
           </motion.div>
+          <motion.div variants={item} className="stat-row">
+            <span className="glass-badge">London · +44 7742 078379 · ateemichael@yahoo.com</span>
+          </motion.div>
+          <motion.div variants={item} className="stat-row">
+            <span className="stat-chip">10+ Years Experience</span>
+            <span className="stat-chip">Vendor Risk & Compliance</span>
+            <span className="stat-chip">Data Flow & DPIA</span>
+            <span className="stat-chip">Enablement‑driven Security</span>
+          </motion.div>
           <motion.a variants={item} href="#a-value" className="hero-down" aria-label="Next section">↓</motion.a>
         </motion.div>
       </section>
@@ -68,7 +77,14 @@ export default function AboutPage() {
             <Col xs={24} md={12}>
               <motion.div variants={item}>
                 <Card className="xp-card fill-card">
-                  <Title level={2} style={{ marginTop: 0 }}>What I Do</Title>
+                  <div className="title-stack">
+                    <Title level={2} style={{ marginTop: 0 }}>What I Do</Title>
+                    <span className="header-icon" aria-hidden>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M10 3h4v2h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3V3Zm2 0h-2v2h2V3Zm-5 6v2h10V9H7Z"/>
+                      </svg>
+                    </span>
+                  </div>
                   <ul style={{ margin: 0, paddingLeft: 18 }}>
                     <li>Third‑party vendor reviews and due‑diligence documentation.</li>
                     <li>Data flow diagrams and secure connectivity mapping.</li>
@@ -81,7 +97,14 @@ export default function AboutPage() {
             <Col xs={24} md={12}>
               <motion.div variants={item}>
                 <Card className="xp-card fill-card">
-                  <Title level={2} style={{ marginTop: 0 }}>How I Work</Title>
+                  <div className="title-stack">
+                    <Title level={2} style={{ marginTop: 0 }}>How I Work</Title>
+                    <span className="header-icon" aria-hidden>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M19.4 15.4a3 3 0 0 1-4.24 0l-1.16-1.16l-1.41 1.41a3 3 0 0 1-4.24 0L5 12.82l1.41-1.41l3.35 3.35a1 1 0 0 0 1.41 0l2.12-2.12l2.53 2.53a1 1 0 0 0 1.41 0l.17-.17a3 3 0 0 0 0-4.24L15.3 8.3l1.41-1.41l2.12 2.12a5 5 0 0 1 0 7.07l-.17.17Z"/>
+                      </svg>
+                    </span>
+                  </div>
                   <ul style={{ margin: 0, paddingLeft: 18 }}>
                     <li>Translate requirements into diagrams, controls, and actions.</li>
                     <li>Bridge technical and non‑technical teams with clarity.</li>
@@ -92,6 +115,11 @@ export default function AboutPage() {
               </motion.div>
             </Col>
           </Row>
+          <motion.div variants={item} className="stat-row" style={{ marginTop: 14 }}>
+            {["Clear diagrams", "Empathetic collaboration", "Evidence first", "Iterate & improve"].map((p) => (
+              <span key={p} className="glass-badge">{p}</span>
+            ))}
+          </motion.div>
           <motion.a variants={item} href="#a-experience" className="hero-down" aria-label="Next section">↓</motion.a>
         </motion.div>
       </section>
@@ -99,6 +127,14 @@ export default function AboutPage() {
       {/* Section 3: Experience */}
       <section id="a-experience" className="snap-section section-vignette">
         <motion.div className="container full-center" variants={container} initial="hidden" animate="show">
+          <div className="section-head">
+            <div className="title-stack">
+              <Title level={2} style={{ marginTop: 0 }}>Experience</Title>
+            </div>
+            <Paragraph className="about-lede" style={{ maxWidth: 760, margin: "6px auto 0" }}>
+              A decade of practical security‑minded delivery across operations, vendor management, and documentation.
+            </Paragraph>
+          </div>
           <Row gutter={[24, 24]} className="same-height-grid">
             {[{
               role: "Deputy Store Manager (Tech‑focused ops)",
@@ -127,6 +163,9 @@ export default function AboutPage() {
                       <span className="xp-date">{x.date}</span>
                     </div>
                     <Paragraph className="xp-desc" style={{ marginTop: 6 }}>{x.desc}</Paragraph>
+                    <Space wrap>
+                      {["Security", "Ops", "Docs"].map(t => (<Tag key={t} className="value-chip">{t}</Tag>))}
+                    </Space>
                   </Card>
                 </motion.div>
               </Col>
@@ -139,11 +178,23 @@ export default function AboutPage() {
       {/* Section 4: Credentials & Tools */}
       <section id="a-credentials" className="snap-section section-vignette">
         <motion.div className="container full-center" variants={container} initial="hidden" animate="show">
+          <div className="section-head">
+            <div className="title-stack">
+              <Title level={2} style={{ marginTop: 0 }}>Credentials</Title>
+            </div>
+          </div>
           <Row gutter={[24, 24]} className="same-height-grid">
             <Col xs={24} md={12}>
               <motion.div variants={item}>
                 <Card className="xp-card fill-card">
-                  <Title level={2} style={{ marginTop: 0 }}>Education</Title>
+                  <div className="title-stack">
+                    <Title level={2} style={{ marginTop: 0 }}>Education</Title>
+                    <span className="header-icon" aria-hidden>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 3l10 5-10 5L2 8l10-5Zm0 7l6 3v4h-2v-3l-4-2-4 2v3H6v-4l6-3Z"/>
+                      </svg>
+                    </span>
+                  </div>
                   <Paragraph style={{ marginBottom: 8 }}>
                     MSc Computer Science with Cyber Security — University of Kent (2025)
                   </Paragraph>
@@ -157,7 +208,14 @@ export default function AboutPage() {
             <Col xs={24} md={12}>
               <motion.div variants={item}>
                 <Card className="xp-card fill-card">
-                  <Title level={2} style={{ marginTop: 0 }}>Certifications</Title>
+                  <div className="title-stack">
+                    <Title level={2} style={{ marginTop: 0 }}>Certifications</Title>
+                    <span className="header-icon" aria-hidden>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 2a6 6 0 1 1 0 12a6 6 0 0 1 0-12Zm-2 12.9l2 1.1l2-1.1V22l-2-1.2L10 22v-7.1Z"/>
+                      </svg>
+                    </span>
+                  </div>
                   <Space wrap>
                     {[
                       "AWS Solutions Architect (renewal in progress)",
