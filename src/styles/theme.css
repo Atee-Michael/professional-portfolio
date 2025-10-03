@@ -198,6 +198,16 @@
 .dark .social-btn{ background: rgba(3,2,19,0.25); }
 .social-btn:hover{ transform: translateY(-2px); box-shadow: var(--shadow-hover); background: var(--creative-gradient-1); color: #fff; }
 
+/* About full-screen snap scrolling */
+.about-snap{ height: calc(100vh - 0px); overflow-y: auto; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.snap-section{ min-height: 100vh; display: grid; place-items: center; scroll-snap-align: start; position: relative; }
+.full-center{ display: grid; place-items: center; text-align: center; }
+.same-height-grid .fill-card{ height: 100%; }
+.about-hero{ background:
+  radial-gradient(600px 300px at 20% 20%, rgba(3,2,19,0.06), transparent 60%),
+  radial-gradient(700px 340px at 80% 10%, rgba(3,2,19,0.05), transparent 60%),
+  var(--background);
+}
 /* About section styles */
 .about-header{ text-align: center; margin-bottom: 28px; }
 .about-lede{ max-width: 820px; margin: 8px auto 0; color: var(--muted-foreground); font-size: 18px; }
