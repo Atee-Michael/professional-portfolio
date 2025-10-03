@@ -1,12 +1,13 @@
 import { Typography, Button, Row, Col, Card, Tag, Form, Input, message } from "antd";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import type { Variants } from "framer-motion";
 import Portrait from "@/components/Portrait";
 import ProjectCard from "@/components/ProjectCard";
 import projects from "@/data/projects.json";
 import type { Project } from "@/types/project";
+import HumanChallenge from "@/components/HumanChallenge";
 
 const { Title, Paragraph } = Typography;
 
@@ -24,6 +25,25 @@ export default function Home() {
   }, [allProjects]);
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const filtered = useMemo(() => activeFilter === "All" ? allProjects : allProjects.filter(p => p.categories?.includes(activeFilter)), [activeFilter, allProjects]);
+
+  // Time-based challenge (unique per render)
+  type Challenge = { ts: number; salt: string; token: string };
+  const computeToken = (ts: number, salt: string) => {
+    const s = `${ts}:${salt}:${navigator.userAgent.length}`;
+    let h = 2166136261 >>> 0; // FNV-1a like
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0).toString(36);
+  };
+  const [challenge, setChallenge] = useState<Challenge>({ ts: 0, salt: "", token: "" });
+  const [humanOk, setHumanOk] = useState(false);
+  useEffect(() => {
+    const ts = Date.now();
+    const saltArr = new Uint32Array(2);
+    if (typeof crypto !== "undefined" && crypto.getRandomValues) crypto.getRandomValues(saltArr); else { saltArr[0] = Math.random() * 1e9; saltArr[1] = Math.random() * 1e9; }
+    const salt = `${saltArr[0].toString(36)}${saltArr[1].toString(36)}`;
+    const token = computeToken(ts, salt);
+    setChallenge({ ts, salt, token });
+  }, []);
 
   return (
     <>
@@ -539,36 +559,88 @@ export default function Home() {
                   <Form
                     layout="vertical"
                     onFinish={(v) => {
-                      const sanitize = (s: string) => (s || "").toString().replace(/[\r\n%0a%0d]/gi, " ").slice(0, 500);
+                      // Honeypot check (simple bot trap)
+                      if (v.website) { message.error("Submission blocked."); return; }
+                      // Time challenge: require short delay and intact token
+                      const minDelay = 1500;
+                      const elapsed = Date.now() - challenge.ts;
+                      const expected = computeToken(challenge.ts, challenge.salt);
+                      if (!challenge.ts || elapsed < minDelay) { message.error("Please take a moment before sending."); return; }
+                      if (expected !== challenge.token) { message.error("Challenge verification failed."); return; }
+                      if (!humanOk) { message.error("Please complete the human check"); return; }
+                      // Stronger sanitization: strip control chars, CRLF, and header injection patterns
+                      const sanitize = (s: string, max = 500) => (s || "")
+                        .toString()
+                        .replace(/[\u0000-\u001F\u007F]/g, " ") // control chars
+                        .replace(/%0a|%0d|\r|\n/gi, " ")
+                        .replace(/[<>]/g, "") // avoid angle brackets in mail body
+                        .replace(/\s{2,}/g, " ")
+                        .trim()
+                        .slice(0, max);
                       const email = (v.email || "").toString().trim();
-                      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254;
                       if (!emailOk) { message.error("Please provide a valid email"); return; }
-                      const name = sanitize(v.name);
-                      const subject = sanitize(v.subject || "Portfolio Contact");
-                      const body = sanitize(v.message);
+                      const name = sanitize(v.name, 80);
+                      const subject = sanitize(v.subject || "Portfolio Contact", 120);
+                      const body = sanitize(v.message, 2000);
                       const mail = `mailto:hello@example.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`${name} <${email}>\n\n${body}`)}`;
                       window.location.href = mail;
                     }}
+                    onFinishFailed={() => message.error("Please fix the highlighted fields")}
                   >
+                    {/* Honeypot field (should remain empty) */}
+                    <Form.Item name="website" style={{ display: "none" }} aria-hidden>
+                      <Input tabIndex={-1} autoComplete="off" />
+                    </Form.Item>
+                    {/* Token field (read-only indicator) */}
+                    <Form.Item style={{ display: "none" }}>
+                      <Input value={challenge.token} readOnly aria-hidden />
+                    </Form.Item>
+
                     <Row gutter={12}>
                       <Col span={12}>
-                        <Form.Item name="name" label="Name">
-                          <Input placeholder="Your name" />
+                        <Form.Item
+                          name="name"
+                          label="Name"
+                          rules={[
+                            { required: true, message: "Please enter your name" },
+                            { max: 80, message: "Name is too long" },
+                          ]}
+                        >
+                          <Input placeholder="Your name" maxLength={80} autoComplete="name" />
                         </Form.Item>
                       </Col>
                       <Col span={12}>
-                        <Form.Item name="email" label="Email">
-                          <Input type="email" placeholder="your@email.com" />
+                        <Form.Item
+                          name="email"
+                          label="Email"
+                          rules={[
+                            { required: true, message: "Please enter your email" },
+                            { type: "email" as const, message: "Email is not valid" },
+                            { max: 254 },
+                          ]}
+                        >
+                          <Input type="email" placeholder="your@email.com" autoComplete="email" inputMode="email" />
                         </Form.Item>
                       </Col>
                     </Row>
-                    <Form.Item name="subject" label="Subject">
-                      <Input placeholder="What’s this about?" />
+
+                    <Form.Item
+                      name="subject"
+                      label="Subject"
+                      rules={[{ required: true, message: "Please add a subject" }, { max: 120 }]}
+                    >
+                      <Input placeholder="What’s this about?" maxLength={120} />
                     </Form.Item>
-                    <Form.Item name="message" label="Message">
-                      <Input.TextArea rows={5} placeholder="Tell me about your project or just say hello…" />
+                    <Form.Item
+                      name="message"
+                      label="Message"
+                      rules={[{ required: true, message: "Please add a short message" }, { max: 2000 }]}
+                    >
+                      <Input.TextArea rows={5} placeholder="Tell me about your project or just say hello…" maxLength={2000} />
                     </Form.Item>
-                    <Button htmlType="submit" size="large" className="premium-btn" block>
+                    <HumanChallenge onSolved={() => setHumanOk(true)} />
+                    <Button htmlType="submit" size="large" className="premium-btn" block disabled={!humanOk}>
                       Send Message
                     </Button>
                   </Form>

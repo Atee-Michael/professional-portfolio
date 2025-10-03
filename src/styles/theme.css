@@ -292,6 +292,21 @@ html:not(.dark) textarea.ant-input::placeholder{ color: rgba(0,0,0,0.6) !importa
 .contact-availability li{ color: var(--muted-foreground); }
 .dark .contact-availability li{ color: rgba(255,255,255,0.78); }
 
+/* Human challenge styles */
+.human-box{ border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.6); }
+.dark .human-box{ background: rgba(3,2,19,0.25); }
+.human-instruction{ font-size: 12px; color: var(--muted-foreground); margin-bottom: 6px; }
+.human-slider .ant-slider-track{ background: linear-gradient(90deg, #10b981, #16a34a) !important; }
+.human-slider .ant-slider-rail{ background: rgba(3,2,19,0.12) !important; }
+.dark .human-slider .ant-slider-rail{ background: rgba(255,255,255,0.18) !important; }
+/* Black handle (dot) */
+.human-slider .ant-slider-handle::after{ box-shadow: none !important; }
+.human-slider .ant-slider-handle{
+  width: 14px; height: 14px; margin-top: -6px;
+  background: #111 !important; border-color: #111 !important;
+}
+.dark .human-slider .ant-slider-handle{ background: #111 !important; border-color: #111 !important; }
+
 /* Navbar green pill hover/active (curved) */
 .site-nav .ant-menu-item{ border-radius: 999px !important; }
 .site-nav .ant-menu-item::after{ display: none !important; }
