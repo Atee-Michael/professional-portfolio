@@ -1,4 +1,4 @@
-import { Typography, Button } from "antd";
+import { Typography, Button, Row, Col, Card, Tag } from "antd";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
@@ -67,12 +67,101 @@ export default function Home() {
       </section>
 
       <section id="about" className="section">
-        <div className="container" style={{ textAlign: "center" }}>
-          <Title level={2} style={{ marginTop: 0 }}>About Me</Title>
-          <Paragraph style={{ maxWidth: 800, margin: "0 auto", color: "var(--muted-foreground)" }}>
-            Passionate about creating useful, secure digital products. With experience across cybersecurity, cloud, and frontend,
-            I bring systems thinking and clear communication to every build.
-          </Paragraph>
+        <div className="container">
+          <div className="about-header">
+            <Title level={2} style={{ marginTop: 0 }}>About Me</Title>
+            <Paragraph className="about-lede">
+              Passionate about creating digital experiences that make a difference. With over 5 years of
+              experience across cybersecurity, cloud, and frontend, I bridge technical execution with creative vision.
+            </Paragraph>
+          </div>
+
+          <Row gutter={[24, 24]} align="top">
+            <Col xs={24} md={14}>
+              <Title level={3} style={{ color: "var(--foreground)", marginTop: 0 }}>My Story</Title>
+              <Paragraph className="about-text">
+                My journey in tech began with a curiosity about how things work. What started as tinkering with code
+                evolved into a passion for building secure, scalable, and elegant solutions that solve real problems.
+              </Paragraph>
+              <Paragraph className="about-text">
+                I specialize in full‑stack development with a strong focus on user experience and security. A background
+                spanning design and engineering lets me translate ideas into resilient systems and polished interfaces.
+              </Paragraph>
+              <Paragraph className="about-text">
+                When I’m not coding, I’m exploring new technologies, contributing to open‑source, or mentoring
+                aspiring developers in the community.
+              </Paragraph>
+
+              <div className="values">
+                <Title level={4} style={{ marginBottom: 12 }}>Core Values</Title>
+                <div className="values-grid">
+                  <Card size="small" className="xp-card">
+                    <Tag className="value-chip">Innovation</Tag>
+                    <Paragraph>Explore new technologies and creative solutions to complex problems.</Paragraph>
+                  </Card>
+                  <Card size="small" className="xp-card">
+                    <Tag className="value-chip">Security</Tag>
+                    <Paragraph>Build with defense‑in‑depth principles and protect users’ data by default.</Paragraph>
+                  </Card>
+                  <Card size="small" className="xp-card">
+                    <Tag className="value-chip">Quality</Tag>
+                    <Paragraph>Write clean, maintainable code and deliver exceptional user experiences.</Paragraph>
+                  </Card>
+                  <Card size="small" className="xp-card">
+                    <Tag className="value-chip">Reliability</Tag>
+                    <Paragraph>Design for scalability and resilience with clear observability and testing.</Paragraph>
+                  </Card>
+                  <Card size="small" className="xp-card">
+                    <Tag className="value-chip">Accessibility</Tag>
+                    <Paragraph>Create inclusive interfaces that are usable by everyone.</Paragraph>
+                  </Card>
+                  <Card size="small" className="xp-card">
+                    <Tag className="value-chip">Collaboration</Tag>
+                    <Paragraph>Foster openness and teamwork to achieve great results.</Paragraph>
+                  </Card>
+                </div>
+              </div>
+            </Col>
+
+            <Col xs={24} md={10}>
+              <Title level={3} style={{ color: "var(--foreground)", marginTop: 0 }}>Experience</Title>
+
+              <div className="experience-list">
+                <Card className="xp-card">
+                  <div className="xp-header">
+                    <div>
+                      <strong>Senior Full‑Stack Developer</strong>
+                      <div className="xp-company">Tech Innovations Inc.</div>
+                    </div>
+                    <span className="xp-date">2022 – Present</span>
+                  </div>
+                  <Paragraph className="xp-desc">Lead development of secure, scalable web applications using React, Node.js, and cloud technologies.</Paragraph>
+                </Card>
+
+                <Card className="xp-card">
+                  <div className="xp-header">
+                    <div>
+                      <strong>UI/UX Developer</strong>
+                      <div className="xp-company">Digital Design Studio</div>
+                    </div>
+                    <span className="xp-date">2020 – 2022</span>
+                  </div>
+                  <Paragraph className="xp-desc">Created user‑centered designs and implemented responsive interfaces across platforms.</Paragraph>
+                </Card>
+
+                <Card className="xp-card">
+                  <div className="xp-header">
+                    <div>
+                      <strong>Frontend Developer</strong>
+                      <div className="xp-company">Startup XYZ</div>
+                    </div>
+                    <span className="xp-date">2019 – 2020</span>
+                  </div>
+                  <Paragraph className="xp-desc">Built component libraries and optimized performance for growth‑stage features.</Paragraph>
+                </Card>
+              </div>
+            </Col>
+          </Row>
         </div>
       </section>
     </>
