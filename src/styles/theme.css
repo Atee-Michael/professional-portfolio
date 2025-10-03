@@ -185,7 +185,7 @@
 .values-grid .ant-typography{ color: var(--foreground); margin-bottom: 0; }
 .dark .values-grid .ant-typography{ color: var(--card-foreground); }
 .xp-card{ background: var(--card) !important; border: 1px solid var(--border) !important; border-radius: 16px !important; box-shadow: var(--shadow-card); }
-.experience-list .xp-card + .xp-card{ margin-top: 16px; }
+.experience-list{ display: grid; gap: 12px; grid-auto-rows: 1fr; }
 .xp-header{ display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
 .xp-company{ color: var(--muted-foreground); font-size: 14px; margin-top: 2px; }
 .xp-date{ font-size: 12px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted-foreground); background: rgba(255,255,255,0.5); }
@@ -193,6 +193,32 @@
 .xp-desc{ margin: 0; color: var(--muted-foreground); }
 .value-chip{ border-radius: 999px; border-color: rgba(3,2,19,0.08); background: #f6faf9; color: var(--foreground); margin-bottom: 6px; }
 .dark .value-chip{ background: rgba(3,2,19,0.3); border-color: var(--border); color: var(--card-foreground); }
+
+/* Section vignette + subtle divider */
+.section-vignette{ position: relative; }
+.section-vignette::before{
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 120px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(3,2,19,0.06), rgba(3,2,19,0.0));
+}
+.dark .section-vignette::before{ background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.0)); }
+.soft-divider{ width: 120px; height: 6px; margin: 0 auto 12px; border-radius: 6px; background: linear-gradient(90deg, var(--creative-accent-bright), var(--creative-accent-bright-2)); opacity: 0.8; }
+
+/* About columns equal height */
+.about-row{ align-items: stretch !important; }
+.about-col{ display: flex; flex-direction: column; height: 100%; }
+
+/* New About 2x2 grid layout */
+.about-grid{ display: grid; gap: 24px; grid-template-columns: 1.1fr 1fr; grid-template-areas:
+  "story exp"
+  "values exp";
+}
+.about-story{ grid-area: story; }
+.about-values{ grid-area: values; align-self: end; }
+.about-experience{ grid-area: exp; align-self: end; display: flex; flex-direction: column; }
+@media (max-width: 992px){
+  .about-grid{ grid-template-columns: 1fr; grid-template-areas: "story" "values" "exp"; }
+  .about-values, .about-experience{ align-self: stretch; }
+}
 
 /* Skills & Expertise */
 .skill-card{ --bar-color: #ff7a00; }
@@ -227,3 +253,10 @@
   border-color: transparent;
 }
 .tool-chip:focus-visible{ outline: 2px solid var(--creative-accent-bright); outline-offset: 2px; }
+
+/* Project filter chips */
+.filter-bar{ display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 16px; }
+.filter-chip{ padding: 8px 12px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.6); color: var(--foreground); cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, background .25s ease, color .2s ease, border-color .2s ease; }
+.dark .filter-chip{ background: rgba(3,2,19,0.35); color: var(--card-foreground); }
+.filter-chip:hover{ transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.filter-chip.active{ background: var(--creative-gradient-1); color: #fff; border-color: transparent; }

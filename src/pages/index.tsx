@@ -1,8 +1,12 @@
 import { Typography, Button, Row, Col, Card, Tag } from "antd";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
 import type { Variants } from "framer-motion";
 import Portrait from "@/components/Portrait";
+import ProjectCard from "@/components/ProjectCard";
+import projects from "@/data/projects.json";
+import type { Project } from "@/types/project";
 
 const { Title, Paragraph } = Typography;
 
@@ -12,6 +16,14 @@ export default function Home() {
     show: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
   };
   const up: Variants = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } };
+  const allProjects = projects as Project[];
+  const allFilters = useMemo(() => {
+    const set = new Set<string>();
+    allProjects.forEach(p => p.categories?.forEach(c => set.add(c)));
+    return ["All", ...Array.from(set)];
+  }, [allProjects]);
+  const [activeFilter, setActiveFilter] = useState<string>("All");
+  const filtered = useMemo(() => activeFilter === "All" ? allProjects : allProjects.filter(p => p.categories?.includes(activeFilter)), [activeFilter, allProjects]);
 
   return (
     <>
@@ -66,6 +78,8 @@ export default function Home() {
         </motion.div>
       </section>
 
+      
+
       <section id="about" className="section">
         <div className="container">
           <div className="about-header">
@@ -76,8 +90,9 @@ export default function Home() {
             </Paragraph>
           </div>
 
-          <Row gutter={[24, 24]} align="top">
-            <Col xs={24} md={14}>
+          {/* 2x2 grid: story + values on left, experience spans right */}
+          <div className="about-grid">
+            <div className="about-story">
               <Title level={3} style={{ color: "var(--foreground)", marginTop: 0 }}>My Story</Title>
               <Paragraph className="about-text">
                 My journey in tech began with a curiosity about how things work. What started as tinkering with code
@@ -91,41 +106,40 @@ export default function Home() {
                 When I’m not coding, I’m exploring new technologies, contributing to open‑source, or mentoring
                 aspiring developers in the community.
               </Paragraph>
+            </div>
 
-              <div className="values">
-                <Title level={4} style={{ marginBottom: 12 }}>Core Values</Title>
-                <div className="values-grid">
-                  <Card size="small" className="xp-card">
-                    <Tag className="value-chip">Innovation</Tag>
-                    <Paragraph>Explore new technologies and creative solutions to complex problems.</Paragraph>
-                  </Card>
-                  <Card size="small" className="xp-card">
-                    <Tag className="value-chip">Security</Tag>
-                    <Paragraph>Build with defense‑in‑depth principles and protect users’ data by default.</Paragraph>
-                  </Card>
-                  <Card size="small" className="xp-card">
-                    <Tag className="value-chip">Quality</Tag>
-                    <Paragraph>Write clean, maintainable code and deliver exceptional user experiences.</Paragraph>
-                  </Card>
-                  <Card size="small" className="xp-card">
-                    <Tag className="value-chip">Reliability</Tag>
-                    <Paragraph>Design for scalability and resilience with clear observability and testing.</Paragraph>
-                  </Card>
-                  <Card size="small" className="xp-card">
-                    <Tag className="value-chip">Accessibility</Tag>
-                    <Paragraph>Create inclusive interfaces that are usable by everyone.</Paragraph>
-                  </Card>
-                  <Card size="small" className="xp-card">
-                    <Tag className="value-chip">Collaboration</Tag>
-                    <Paragraph>Foster openness and teamwork to achieve great results.</Paragraph>
-                  </Card>
-                </div>
+            <div className="about-values">
+              <Title level={4} style={{ marginBottom: 12 }}>Core Values</Title>
+              <div className="values-grid">
+                <Card size="small" className="xp-card">
+                  <Tag className="value-chip">Innovation</Tag>
+                  <Paragraph>Explore new technologies and creative solutions to complex problems.</Paragraph>
+                </Card>
+                <Card size="small" className="xp-card">
+                  <Tag className="value-chip">Security</Tag>
+                  <Paragraph>Build with defense‑in‑depth principles and protect users’ data by default.</Paragraph>
+                </Card>
+                <Card size="small" className="xp-card">
+                  <Tag className="value-chip">Quality</Tag>
+                  <Paragraph>Write clean, maintainable code and deliver exceptional user experiences.</Paragraph>
+                </Card>
+                <Card size="small" className="xp-card">
+                  <Tag className="value-chip">Reliability</Tag>
+                  <Paragraph>Design for scalability and resilience with clear observability and testing.</Paragraph>
+                </Card>
+                <Card size="small" className="xp-card">
+                  <Tag className="value-chip">Accessibility</Tag>
+                  <Paragraph>Create inclusive interfaces that are usable by everyone.</Paragraph>
+                </Card>
+                <Card size="small" className="xp-card">
+                  <Tag className="value-chip">Collaboration</Tag>
+                  <Paragraph>Foster openness and teamwork to achieve great results.</Paragraph>
+                </Card>
               </div>
-            </Col>
+            </div>
 
-            <Col xs={24} md={10}>
+            <div className="about-experience">
               <Title level={3} style={{ color: "var(--foreground)", marginTop: 0 }}>Experience</Title>
-
               <div className="experience-list">
                 <Card className="xp-card">
                   <div className="xp-header">
@@ -159,11 +173,24 @@ export default function Home() {
                   </div>
                   <Paragraph className="xp-desc">Built component libraries and optimized performance for growth‑stage features.</Paragraph>
                 </Card>
+
+                <Card className="xp-card">
+                  <div className="xp-header">
+                    <div>
+                      <strong>IT Support</strong>
+                      <div className="xp-company">Shwbell Consulting</div>
+                    </div>
+                    <span className="xp-date">2012 – 2016</span>
+                  </div>
+                  <Paragraph className="xp-desc">Provided end‑user support, managed tickets, and maintained workstations and network peripherals.</Paragraph>
+                </Card>
               </div>
-            </Col>
-          </Row>
+            </div>
+          </div>
         </div>
       </section>
+
+      
 
       {/* Skills & Expertise */}
       <section id="skills" className="section">
@@ -392,17 +419,57 @@ export default function Home() {
             </Col>
           </Row>
 
-          <div style={{ height: 20 }} />
+          
+        </div>
+      </section>
 
+      {/* Tools & Technologies — separate section with vignette and fade-in */}
+      <section id="tools" className="section section-vignette">
+        <motion.div className="container" variants={container} initial="hidden" animate="show">
           <div className="about-header">
-            <Title level={3} style={{ marginTop: 0 }}>Tools & Technologies</Title>
+            <div className="soft-divider" />
+            <Title level={2} style={{ marginTop: 0 }}>Tools & Technologies</Title>
+            <Paragraph className="about-lede">Frameworks, platforms, and services I use daily.</Paragraph>
           </div>
-          <div className="tools-grid">
+          <motion.div variants={up} className="tools-grid">
             {["VS Code", "GitHub", "Postman", "Vercel", "Supabase", "Stripe", "Framer", "Linear", "Slack", "Notion", "Jira", "Firebase"].map(tool => (
               <span className="tool-chip" key={tool}>{tool}</span>
             ))}
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Featured Projects (after Tools & Tech) */}
+      <section id="projects" className="section section-vignette">
+        <motion.div className="container" variants={container} initial="hidden" animate="show">
+          <div className="about-header">
+            <div className="soft-divider" />
+            <Title level={2} style={{ marginTop: 0 }}>Featured Projects</Title>
+            <Paragraph className="about-lede">
+              A selection of work spanning security, frontend, backend, and cloud.
+            </Paragraph>
           </div>
-        </div>
+
+          <motion.div variants={up} className="filter-bar">
+            {allFilters.map(f => (
+              <button key={f} className={`filter-chip ${activeFilter === f ? 'active' : ''}`} onClick={() => setActiveFilter(f)}>{f}</button>
+            ))}
+          </motion.div>
+
+          <Row gutter={[24, 24]}>
+            {filtered.slice(0, 3).map((p) => (
+              <Col xs={24} md={12} lg={8} key={p.title}>
+                <ProjectCard {...p} />
+              </Col>
+            ))}
+          </Row>
+
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
+            <Button className="outline-btn" size="large" href="/projects">
+              View All Projects
+            </Button>
+          </div>
+        </motion.div>
       </section>
     </>
   );
