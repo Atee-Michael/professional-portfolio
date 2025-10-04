@@ -169,3 +169,43 @@ This portfolio presents a clear record of my work. If you are seeking a professi
 - Email: ateemichael@yahoo.com  
 - GitHub: [github.com/michaelatee](https://github.com/michaelatee)  
 - LinkedIn: [linkedin.com/in/michaelatee](https://linkedin.com/in/michaelatee)
+Admin Dashboard (Secure)
+=========================
+
+This project includes a secure admin console to manage portfolio projects and documentation.
+
+Features
+- OAuth authentication via NextAuth (GitHub/Google)
+- Admin‑only access to `/admin` and `/api/admin/*`
+- CRUD for `src/data/projects.json`
+- Secure PDF uploads to `public/docs`
+- Input sanitisation and size limits
+- Admin audit log at `src/data/admin-log.jsonl`
+
+Setup
+1) Create a `.env.local` with your provider keys and admin emails:
+
+```
+GITHUB_ID=xxxx
+GITHUB_SECRET=xxxx
+GOOGLE_ID=xxxx
+GOOGLE_SECRET=xxxx
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=generate_a_strong_random_value
+ADMIN_EMAILS=you@example.com,second@example.com
+```
+
+2) Start the dev server: `npm run dev`
+
+Access Control
+- Only emails listed in `ADMIN_EMAILS` receive `session.user.isAdmin=true`.
+- Middleware restricts `/admin` and `/api/admin/*` routes.
+
+Security Notes
+- Inputs sanitised on API (strip control chars/CRLF/angle brackets; length limits).
+- PDF uploads validated (MIME and `%PDF` header; max 10MB; file name sanitised).
+- All admin actions logged with timestamp and user email.
+
+Routes
+- UI: `/admin`
+- API: `/api/admin/projects` (GET/POST/PUT/DELETE) and `/api/admin/upload` (POST)
