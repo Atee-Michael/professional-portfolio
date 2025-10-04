@@ -15,10 +15,13 @@ export function sanitizeArray(input: unknown, maxItems = 10): string[] {
 }
 
 export function assertPdfBuffer(buf: Buffer): void {
-  // minimal check: starts with %PDF and not huge
+  // size check
   if (buf.length === 0 || buf.length > 10 * 1024 * 1024) throw new Error("Invalid PDF size");
-  const head = buf.subarray(0, 4).toString("utf8");
-  if (!head.startsWith("%PDF")) throw new Error("Not a PDF");
+  const head = buf.subarray(0, 5).toString("utf8");
+  if (!head.startsWith("%PDF-")) throw new Error("Not a PDF");
+  // trailer check (%%EOF near end)
+  const tail = buf.subarray(Math.max(0, buf.length - 1024)).toString("utf8");
+  if (!/%%EOF/.test(tail)) throw new Error("Malformed PDF");
 }
 
 export type AdminLog = {
@@ -27,4 +30,3 @@ export type AdminLog = {
   action: string;
   detail?: any;
 };
-

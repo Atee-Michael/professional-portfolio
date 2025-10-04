@@ -1,0 +1,18 @@
+[
+  {
+    "title": "Cybersecurity",
+    "color": "#14b8a6",
+    "items": [
+      { "name": "Threat Modeling", "percent": 90 },
+      { "name": "OWASP Top 10", "percent": 92 }
+    ]
+  },
+  {
+    "title": "Frontend",
+    "color": "#ff7a00",
+    "items": [
+      { "name": "React/Next.js", "percent": 95 },
+      { "name": "TypeScript", "percent": 90 }
+    ]
+  }
+]

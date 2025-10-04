@@ -4,6 +4,7 @@ import { authOptions } from "../auth/[...nextauth]";
 import fs from "fs";
 import path from "path";
 import { sanitizeText, sanitizeArray } from "@/lib/sanitize";
+import { keyFromRequest, rateLimit } from "@/lib/rateLimit";
 
 const dataPath = path.join(process.cwd(), "src/data/projects.json");
 const logPath = path.join(process.cwd(), "src/data/admin-log.jsonl");
@@ -30,6 +31,9 @@ function log(session: any, action: string, detail?: any) {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions as any);
+  const key = keyFromRequest(req);
+  const rl = rateLimit(key, 60, 60_000); // 60 req/min per IP per route
+  if (!rl.allowed) return res.status(429).json({ error: "Too many requests" });
   try {
     if (req.method === "GET") {
       requireAdmin(session);
@@ -92,4 +96,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(e.status || 500).json({ error: e.message || "Server error" });
   }
 }
-
