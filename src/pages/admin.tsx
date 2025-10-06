@@ -63,6 +63,40 @@ export default function AdminPage() {
   useEffect(() => { if (isAdmin) loadTools(); }, [isAdmin]);
   const saveTools = async (vals: any) => { const arr = (vals.toolsText || "").split("\n").map((l: string) => l.trim()).filter(Boolean); const r = await fetch("/api/admin/tools", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tools: arr }) }); if (!r.ok) return message.error("Save failed"); message.success("Saved"); loadTools(); };
 
+  // Admin idle sign-out
+  useEffect(() => {
+    if (!isAdmin) return; // only track on admin
+    const minutes = Number(process.env.NEXT_PUBLIC_ADMIN_IDLE_MINUTES) || 15; // default 15 mins
+    const timeoutMs = Math.max(1, minutes) * 60_000;
+    let timer: any = null;
+    let signedOut = false;
+
+    const schedule = () => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (!signedOut) {
+          signedOut = true;
+          message.warning("Signed out due to inactivity");
+          signOut();
+        }
+      }, timeoutMs);
+    };
+
+    const onActivity = () => {
+      if (signedOut) return;
+      schedule();
+    };
+
+    const events = ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "visibilitychange"] as const;
+    events.forEach((e) => window.addEventListener(e, onActivity, { passive: true } as any));
+    schedule();
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      events.forEach((e) => window.removeEventListener(e, onActivity as any));
+    };
+  }, [isAdmin]);
+
   const columns: ColumnsType<Project> = [
     { title: "Title", dataIndex: "title" },
     { title: "Stack", dataIndex: "stack", render: (s: string[]) => <Space wrap>{s?.map((t) => <Tag key={t}>{t}</Tag>)}</Space> },
