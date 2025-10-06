@@ -6,6 +6,12 @@ import path from "path";
 import formidable from "formidable";
 import { assertPdfBuffer } from "@/lib/sanitize";
 import { keyFromRequest, rateLimit } from "@/lib/rateLimit";
+const logPath = require("path").join(process.cwd(), "src/data/admin-log.jsonl");
+function log(session: any, action: string, detail?: any) {
+  const fs = require("fs");
+  const line = JSON.stringify({ ts: new Date().toISOString(), user: session?.user?.email || "unknown", action, detail }) + "\n";
+  fs.appendFileSync(logPath, line);
+}
 
 export const config = { api: { bodyParser: false } };
 
@@ -31,5 +37,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const docsDir = path.join(process.cwd(), "public/docs");
   if (!fs.existsSync(docsDir)) fs.mkdirSync(docsDir, { recursive: true });
   fs.writeFileSync(path.join(docsDir, safeName), buf);
+  log(session, "upload_pdf", { file: safeName, size: buf.length });
   return res.json({ ok: true, docPath: `/docs/${safeName}` });
 }

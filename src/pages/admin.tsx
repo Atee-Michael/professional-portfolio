@@ -63,6 +63,12 @@ export default function AdminPage() {
   useEffect(() => { if (isAdmin) loadTools(); }, [isAdmin]);
   const saveTools = async (vals: any) => { const arr = (vals.toolsText || "").split("\n").map((l: string) => l.trim()).filter(Boolean); const r = await fetch("/api/admin/tools", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tools: arr }) }); if (!r.ok) return message.error("Save failed"); message.success("Saved"); loadTools(); };
 
+  // Audit log state
+  const [logs, setLogs] = useState<any[]>([]);
+  const [logsLoading, setLogsLoading] = useState(false);
+  const loadLogs = async () => { setLogsLoading(true); const r = await fetch("/api/admin/logs?limit=200"); if (r.ok) setLogs(await r.json()); setLogsLoading(false); };
+  useEffect(() => { if (isAdmin) loadLogs(); }, [isAdmin]);
+
   // Admin idle sign-out
   useEffect(() => {
     if (!isAdmin) return; // only track on admin
@@ -231,6 +237,31 @@ export default function AdminPage() {
                     </Form.Item>
                     <Button type="primary" htmlType="submit">Save Tools</Button>
                   </Form>
+                </Card>
+              </>
+            ),
+          },
+          {
+            key: "logs",
+            label: "Audit Log",
+            children: (
+              <>
+                <Card className="xp-card">
+                  <Space style={{ marginBottom: 12 }}>
+                    <Button onClick={loadLogs} loading={logsLoading}>Refresh</Button>
+                  </Space>
+                  <Table<any>
+                    rowKey={(r, i) => String(i)}
+                    loading={logsLoading}
+                    dataSource={logs}
+                    pagination={{ pageSize: 10 }}
+                    columns={[
+                      { title: "When", dataIndex: "ts", render: (v: string) => v ? new Date(v).toLocaleString() : "" },
+                      { title: "User", dataIndex: "user" },
+                      { title: "Action", dataIndex: "action" },
+                      { title: "Detail", render: (_, r) => <code style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(r.detail ?? r.raw ?? {}, null, 0)}</code> },
+                    ]}
+                  />
                 </Card>
               </>
             ),

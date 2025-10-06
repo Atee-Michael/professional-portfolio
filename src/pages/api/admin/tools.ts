@@ -7,6 +7,11 @@ import { sanitizeArray, sanitizeText } from "@/lib/sanitize";
 import { keyFromRequest, rateLimit } from "@/lib/rateLimit";
 
 const dataPath = path.join(process.cwd(), "src/data/tools.json");
+const logPath = path.join(process.cwd(), "src/data/admin-log.jsonl");
+function log(session: any, action: string, detail?: any) {
+  const line = JSON.stringify({ ts: new Date().toISOString(), user: session?.user?.email || "unknown", action, detail }) + "\n";
+  fs.appendFileSync(logPath, line);
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions as any);
@@ -20,13 +25,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "POST") {
     const body = req.body || {};
     const arr = sanitizeArray(body.tools, 50);
-    write(arr); return res.status(201).json({ ok: true });
+    write(arr);
+    log(session, "tools_create", { count: arr.length });
+    return res.status(201).json({ ok: true });
   }
   if (req.method === "PUT") {
     const body = req.body || {};
     const arr = sanitizeArray(body.tools, 50);
-    write(arr); return res.json({ ok: true });
+    write(arr);
+    log(session, "tools_update", { count: arr.length });
+    return res.json({ ok: true });
   }
   return res.status(405).json({ error: "Method not allowed" });
 }
-
