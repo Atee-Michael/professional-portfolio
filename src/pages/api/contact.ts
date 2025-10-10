@@ -13,13 +13,20 @@ type Payload = {
   website?: string; // honeypot
 };
 
+type ContactLog = {
+  name?: string;
+  email?: string;
+  subject?: string;
+  [key: string]: unknown;
+};
+
 function validateEmail(email: string): boolean {
   if (!email || email.length > 254) return false;
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 }
 
-async function pushLogSnag(detail: any) {
+async function pushLogSnag(detail: ContactLog) {
   const token = process.env.LOGSNAG_TOKEN;
   const project = process.env.LOGSNAG_PROJECT || "portfolio";
   const channel = process.env.LOGSNAG_CHANNEL || "contact";
@@ -41,13 +48,13 @@ async function pushLogSnag(detail: any) {
         },
         notify: true,
       }),
-    } as any);
+    });
   } catch {
     // swallow errors to avoid affecting response
   }
 }
 
-function appendLocalLog(line: any) {
+function appendLocalLog(line: Record<string, unknown>) {
   try {
     const logPath = path.join(process.cwd(), "src/data/contact.log");
     const payload = JSON.stringify(line) + "\n";
@@ -94,28 +101,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: "Email service not configured" });
     }
 
-    const host = process.env.SMTP_HOST || "smtp.gmail.com";
-    const explicitPort = process.env.SMTP_PORT;
-    const tlsInsecure = String(process.env.SMTP_TLS_INSECURE || "false") === "true";
-    const baseConfig = {
-      host,
-      port: Number(explicitPort || 465),
-      secure: String(process.env.SMTP_SECURE || (explicitPort ? "false" : "true")) === "true",
-      auth: { user: fromUser, pass },
-      tls: tlsInsecure ? { rejectUnauthorized: false } : { servername: host },
-    } as const;
-
-    const sendWith = async (cfg: any) => {
-      const transporter = nodemailer.createTransport(cfg);
-      return transporter.sendMail({
-        from: fromUser,
-        to,
-        subject: `[Portfolio] ${subject}`,
-        text,
-        html,
-        replyTo: email,
-      });
-    };
+    const isDev = process.env.NODE_ENV !== "production";
 
     const text = [
       `From: ${name} <${email}>`,
@@ -133,41 +119,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       </div>
     `;
 
-    try {
-      await sendWith(baseConfig);
-    } catch (e: any) {
-      // If using default Gmail settings and no explicit port provided, retry with 587 STARTTLS
-      const primaryCode = e?.code || e?.responseCode || "UNKNOWN";
-      const shouldRetry = !explicitPort && host === "smtp.gmail.com";
-      if (shouldRetry) {
-        try {
-          await sendWith({
-            ...baseConfig,
-            port: 587,
-            secure: false,
-            tls: tlsInsecure ? { rejectUnauthorized: false } : { ciphers: "TLSv1.2", rejectUnauthorized: true, servername: host },
-          });
-        } catch (e2: any) {
-          const code2 = e2?.code || e2?.responseCode || "UNKNOWN";
-          appendLocalLog({ ts: new Date().toISOString(), err: "sendMail failed (retry)", code: code2, msg: e2?.message || String(e2) });
-          if (dryRun) {
-            const logLine = { ts: new Date().toISOString(), ip: key.split(":")[0], name, email, subject, note: "dry_run_after_retry" };
-            appendLocalLog({ ...logLine, ok: true });
-            pushLogSnag(logLine);
-            return res.json({ ok: true, dryRun: true });
-          }
-          return res.status(502).json({ error: "Email delivery failed" });
-        }
-      } else {
-        appendLocalLog({ ts: new Date().toISOString(), err: "sendMail failed", code: primaryCode, msg: e?.message || String(e) });
-        if (dryRun) {
-          const logLine = { ts: new Date().toISOString(), ip: key.split(":")[0], name, email, subject, note: "dry_run_primary" };
-          appendLocalLog({ ...logLine, ok: true });
-          pushLogSnag(logLine);
-          return res.json({ ok: true, dryRun: true });
-        }
-        return res.status(502).json({ error: "Email delivery failed" });
+    const getErrorInfo = (err: unknown): { code?: string; responseCode?: string | number; message?: string } => {
+      if (typeof err === 'object' && err !== null) {
+        const anyErr = err as { code?: string; responseCode?: string | number; message?: string };
+        return { code: anyErr.code, responseCode: anyErr.responseCode, message: anyErr.message };
       }
+      return {};
+    };
+
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || "smtp.gmail.com",
+        port: Number(process.env.SMTP_PORT || 465),
+        secure: String(process.env.SMTP_SECURE ?? "true") === "true",
+        auth: { user: fromUser, pass },
+        ...(isDev && { tls: { rejectUnauthorized: false } }),
+      } as Record<string, unknown>);
+
+      await transporter.sendMail({
+        from: fromUser,
+        to,
+        subject: `[Portfolio] ${subject}`,
+        text,
+        html,
+        replyTo: email,
+      });
+    } catch (e: unknown) {
+      const msg = typeof e === 'object' && e && 'message' in e ? String((e as { message?: unknown }).message) : String(e);
+      appendLocalLog({ ts: new Date().toISOString(), err: "sendMail failed", msg });
+      if (dryRun) {
+        const logLine = { ts: new Date().toISOString(), ip: key.split(":")[0], name, email, subject, note: "dry_run_simple" };
+        appendLocalLog({ ...logLine, ok: true });
+        pushLogSnag(logLine);
+        return res.json({ ok: true, dryRun: true });
+      }
+      return res.status(502).json({ error: "Email delivery failed" });
     }
 
     const logLine = { ts: new Date().toISOString(), ip: key.split(":")[0], name, email, subject };
@@ -175,8 +161,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     pushLogSnag(logLine); // fire and forget
 
     return res.json({ ok: true });
-  } catch (e: any) {
-    appendLocalLog({ ts: new Date().toISOString(), err: e?.message || String(e) });
+  } catch (e: unknown) {
+    const msg = typeof e === 'object' && e && 'message' in e ? String((e as { message?: unknown }).message) : String(e);
+    appendLocalLog({ ts: new Date().toISOString(), err: msg });
     return res.status(500).json({ error: "Server error" });
   }
 }

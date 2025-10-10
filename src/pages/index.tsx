@@ -1,4 +1,5 @@
 import { Typography, Button, Row, Col, Card, Tag, Form, Input, App as AntdApp } from "antd";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useMemo, useState, useEffect } from "react";
@@ -14,7 +15,8 @@ import HumanChallenge from "@/components/HumanChallenge";
 const { Title, Paragraph } = Typography;
 
 export default function Home() {
-  const { message } = AntdApp.useApp();
+  const { message, modal } = AntdApp.useApp();
+  const router = useRouter();
   const container: Variants = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
@@ -239,7 +241,7 @@ export default function Home() {
                   return (
                     <Card className="xp-card skill-card" bodyStyle={{ padding: 18 }} style={cardStyle}>
                       <div className="skill-head">
-                        <span className="skill-icon">�YZ"</span>
+                        <span className="skill-icon">?</span>
                         <strong>{cat.title}</strong>
                       </div>
                       <div className="skill-list">
@@ -257,8 +259,8 @@ export default function Home() {
                     </Card>
                   );
                 })()}
-                    <div className="skill-head">
-                      <span className="skill-icon">🎓</span>
+                    {/* <div className="skill-head">
+                      <span className="skill-icon">?</span>
                       <strong>{cat.title}</strong>
                     </div>
                     <div className="skill-list">
@@ -273,7 +275,7 @@ export default function Home() {
                         );
                       })}
                     </div>
-                  </Card>
+                  </Card> */}
                 </Col>
               );
             })}
@@ -421,7 +423,7 @@ export default function Home() {
                         });
                         const json = await res.json().catch(() => ({}));
                         if (!res.ok) {
-                          // Fallback: if server cannot deliver email (e.g., TLS interception), try mailto so user can still contact
+                          // Fallback: if server cannot deliver email (e.g., TLS interception), offer to open mail app
                           if (res.status === 502 || String(json.error || '').toLowerCase().includes('email delivery failed')) {
                             const sanitize = (s: string, max = 500) => (s || '')
                               .toString()
@@ -435,20 +437,31 @@ export default function Home() {
                             const subj = sanitize(v.subject || 'Portfolio Contact', 120);
                             const body = sanitize(v.message, 2000);
                             const mail = `mailto:${encodeURIComponent('ateemichael@yahoo.com')}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(`${name} <${v.email}>\n\n${body}`)}`;
-                            message.warning('Email service unavailable. Opening your mail app...');
-                            window.location.href = mail;
+                            modal.confirm({
+                              title: 'Email service unavailable',
+                              content: 'Unable to send in the background right now. Do you want to open your mail app instead?',
+                              okText: 'Open Mail App',
+                              cancelText: 'Cancel',
+                              onOk: () => { window.location.href = mail; },
+                            });
                           } else {
                             message.error(json.error || 'Failed to send message');
                           }
                           setSending(false);
                           return;
                         }
-                        message.success('Message sent successfully.');
+                        modal.confirm({
+                          title: 'Message sent successfully',
+                          content: 'We will reach out shortly.',
+                          okText: 'Back to Home',
+                          cancelText: 'Close',
+                          onOk: () => { router.push('/'); },
+                        });
                         // reset form fields
                         (document.querySelector('#contact form') as HTMLFormElement)?.reset();
                         setHumanOk(false);
                         setSending(false);
-                      } catch (e) {
+                      } catch {
                         setSending(false);
                         message.error('Network error while sending');
                       }
