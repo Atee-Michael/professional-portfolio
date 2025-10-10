@@ -40,6 +40,7 @@ export default function Home() {
   };
   const [challenge, setChallenge] = useState<Challenge>({ ts: 0, salt: "", token: "" });
   const [humanOk, setHumanOk] = useState(false);
+  const [sending, setSending] = useState(false);
   useEffect(() => {
     const ts = Date.now();
     const saltArr = new Uint32Array(2);
@@ -370,7 +371,7 @@ export default function Home() {
                 <Card className="xp-card contact-card" title={<strong>Send a Message</strong>}>
                   <Form
                     layout="vertical"
-                    onFinish={(v) => {
+                    onFinish={async (v) => {
                       // Honeypot check (simple bot trap)
                       if (v.website) { message.error("Submission blocked."); return; }
                       // Time challenge: require short delay and intact token
@@ -380,23 +381,34 @@ export default function Home() {
                       if (!challenge.ts || elapsed < minDelay) { message.error("Please take a moment before sending."); return; }
                       if (expected !== challenge.token) { message.error("Challenge verification failed."); return; }
                       if (!humanOk) { message.error("Please complete the human check"); return; }
-                      // Stronger sanitization: strip control chars, CRLF, and header injection patterns
-                      const sanitize = (s: string, max = 500) => (s || "")
-                        .toString()
-                        .replace(/[\u0000-\u001F\u007F]/g, " ") // control chars
-                        .replace(/%0a|%0d|\r|\n/gi, " ")
-                        .replace(/[<>]/g, "") // avoid angle brackets in mail body
-                        .replace(/\s{2,}/g, " ")
-                        .trim()
-                        .slice(0, max);
-                      const email = (v.email || "").toString().trim();
-                      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254;
-                      if (!emailOk) { message.error("Please provide a valid email"); return; }
-                      const name = sanitize(v.name, 80);
-                      const subject = sanitize(v.subject || "Portfolio Contact", 120);
-                      const body = sanitize(v.message, 2000);
-                      const mail = `mailto:hello@example.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`${name} <${email}>\n\n${body}`)}`;
-                      window.location.href = mail;
+                      try {
+                        setSending(true);
+                        const res = await fetch('/api/contact', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            name: v.name,
+                            email: v.email,
+                            subject: v.subject || 'Portfolio Contact',
+                            message: v.message,
+                            website: v.website || '',
+                          }),
+                        });
+                        const json = await res.json().catch(() => ({}));
+                        if (!res.ok) {
+                          message.error(json.error || 'Failed to send message');
+                          setSending(false);
+                          return;
+                        }
+                        message.success('Message sent! I\'ll get back to you soon.');
+                        // reset form fields
+                        (document.querySelector('#contact form') as HTMLFormElement)?.reset();
+                        setHumanOk(false);
+                        setSending(false);
+                      } catch (e) {
+                        setSending(false);
+                        message.error('Network error while sending');
+                      }
                     }}
                     onFinishFailed={() => message.error("Please fix the highlighted fields")}
                   >
@@ -452,7 +464,7 @@ export default function Home() {
                       <Input.TextArea rows={5} placeholder="Tell me about your project or just say hello…" maxLength={2000} />
                     </Form.Item>
                     <HumanChallenge onSolved={() => setHumanOk(true)} />
-                    <Button htmlType="submit" size="large" className="premium-btn" block disabled={!humanOk}>
+                    <Button htmlType="submit" size="large" className="premium-btn" block disabled={!humanOk || sending} loading={sending}>
                       Send Message
                     </Button>
                   </Form>
