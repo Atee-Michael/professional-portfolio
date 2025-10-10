@@ -79,12 +79,19 @@ a:hover, a:focus { text-decoration: underline; }
 @media (max-width: 640px) { .section { padding: 56px 0; } }
 .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 16px; }
 
-/* Headings gradient accent */
+/* Headings with safe fallback; apply gradient only where supported */
 h1, h2, h3 {
   font-weight: 600;
-  background: var(--creative-gradient-3);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--foreground);
+}
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  h1, h2, h3 {
+    background: var(--creative-gradient-3);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
 /* Ant Design base bindings to tokens */
@@ -139,6 +146,44 @@ h1, h2, h3 {
   box-shadow: var(--shadow-hover);
   border-color: rgba(3, 2, 19, 0.2);
 }
+.dark .ant-btn-default{
+  background: rgba(255,255,255,0.10) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--card-foreground) !important;
+}
+.dark .ant-btn-default:hover, .dark .ant-btn-default:focus{
+  transform: scale(1.03);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(255,255,255,0.25) !important;
+}
+/* Admin: ensure default buttons don't go dark on hover in light mode */
+.admin-page .ant-btn-default:hover,
+.admin-page .ant-btn-default:focus{
+  background: #ffffff !important;
+  color: var(--foreground) !important;
+  border-color: rgba(3,2,19,0.2) !important;
+}
+.admin-page .ant-btn:not(.ant-btn-primary):hover,
+.admin-page .ant-btn:not(.ant-btn-primary):focus{
+  background: #ffffff !important;
+  color: var(--foreground) !important;
+}
+/* Make danger buttons clearly visible in both themes */
+.ant-btn-default.ant-btn-dangerous{
+  color: #d4183d !important;
+  border-color: #d4183d !important;
+  background: #ffffff !important;
+}
+.ant-btn-default.ant-btn-dangerous:hover,
+.ant-btn-default.ant-btn-dangerous:focus{
+  box-shadow: var(--shadow-hover);
+  filter: brightness(1.02);
+}
+.dark .ant-btn-default.ant-btn-dangerous{
+  color: #ffffff !important;
+  background: #d4183d !important;
+  border-color: #d4183d !important;
+}
 .ant-btn-primary {
   color: #fff;
   border: none;
@@ -166,6 +211,138 @@ h1, h2, h3 {
 .ant-popover-inner, .ant-dropdown-menu, .ant-modal-content {
   border-radius: var(--radius);
   border: 1px solid var(--border);
+}
+
+/* Ensure elevated surfaces use token colors in both themes */
+.ant-modal-content,
+.ant-modal-header,
+.ant-modal-body{
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+}
+.ant-modal-title{ color: var(--card-foreground) !important; }
+
+/* Tabs content area should not render as black in light mode */
+.ant-tabs-content-holder{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* Table text remains readable over token surfaces */
+.ant-table, .ant-table-container, .ant-table-content{
+  background: transparent !important;
+  color: var(--card-foreground);
+}
+.ant-table-thead > tr > th{
+  color: var(--card-foreground);
+  background: var(--card) !important;
+}
+.ant-table-tbody{ background: var(--card); }
+.ant-table-tbody > tr > td{ color: var(--card-foreground); }
+/* Stronger selectors to ensure table header labels show in dark mode */
+.admin-page .ant-table-thead > tr > th,
+.admin-page .ant-table-thead > tr > th .ant-table-column-title,
+.admin-page .ant-table-thead > tr > th .ant-table-column-sorters,
+.admin-page .ant-table-thead .ant-table-cell,
+.admin-page .ant-table-thead .ant-table-cell > span{
+  color: var(--card-foreground) !important;
+}
+.admin-page .ant-table-thead > tr > th{ background: var(--card) !important; border-color: var(--border) !important; }
+
+/* Admin page: ensure tab panes and tables never render with black backgrounds */
+.admin-page .ant-tabs-content-holder,
+.admin-page .ant-tabs-tabpane{
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+}
+.admin-page .ant-table-wrapper,
+.admin-page .ant-table,
+.admin-page .ant-table-container,
+.admin-page .ant-table-content{
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+}
+.admin-page .ant-table-tbody > tr > td,
+.admin-page .ant-table-thead > tr > th{
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+}
+.admin-page code{ background: transparent !important; color: var(--card-foreground) !important; }
+
+/* Admin: prevent black highlights and use theme accents */
+/* Text selection highlight */
+.admin-page ::selection{ background: rgba(255,170,0,0.35); color: var(--foreground); }
+.dark .admin-page ::selection{ background: rgba(255,255,255,0.25); color: var(--card-foreground); }
+
+/* Tabs active indicator and hover state */
+.admin-page .ant-tabs-ink-bar{ background: var(--creative-accent-bright) !important; }
+.admin-page .ant-tabs-tab:hover{ background: rgba(3,2,19,0.04) !important; }
+.dark .admin-page .ant-tabs-tab:hover{ background: rgba(255,255,255,0.10) !important; }
+
+/* Table row selection/hover (avoid black) */
+.admin-page .ant-table-tbody > tr:hover > td{ background: linear-gradient(180deg, rgba(3,2,19,0.03), transparent) !important; }
+.admin-page .ant-table-tbody .ant-table-row:hover > .ant-table-cell{ background: linear-gradient(180deg, rgba(3,2,19,0.03), transparent) !important; }
+.admin-page .ant-table-row:hover{ background: transparent !important; }
+.dark .admin-page .ant-table-tbody > tr:hover > td{ background: rgba(255,255,255,0.06) !important; }
+.admin-page .ant-table-tbody > tr.ant-table-row-selected > td{ background: rgba(255,170,0,0.14) !important; }
+.dark .admin-page .ant-table-tbody > tr.ant-table-row-selected > td{ background: rgba(255,255,255,0.10) !important; }
+
+/* Admin: ensure empty-state/containers are not black */
+.admin-page .ant-table-wrapper .ant-spin-nested-loading,
+.admin-page .ant-table-wrapper .ant-spin-container,
+.admin-page .ant-table-container,
+.admin-page .ant-table-body,
+.admin-page .ant-table-placeholder,
+.admin-page .ant-table-cell,
+.admin-page .ant-empty,
+.admin-page .ant-empty-normal{
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+}
+.admin-page .ant-table-empty .ant-table-tbody > tr.ant-table-placeholder:hover > td{
+  background: var(--card) !important;
+}
+.admin-page .ant-empty-description{ color: var(--muted-foreground) !important; }
+/* Table hover states with visible contrast */
+.ant-table-tbody > tr:hover > td{
+  background: linear-gradient(180deg, rgba(3,2,19,0.03), transparent) !important;
+}
+.dark .ant-table-tbody > tr:hover > td{
+  background: rgba(255,255,255,0.06) !important;
+}
+.ant-table-thead > tr > th:hover{ background: var(--card) !important; }
+
+/* Tabs labels readable in both themes */
+.ant-tabs-tab .ant-tabs-tab-btn{ color: var(--foreground) !important; }
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn{ color: var(--foreground) !important; font-weight: 600; }
+.ant-tabs-tab:hover .ant-tabs-tab-btn{ color: var(--foreground) !important; }
+
+/* Card headers should never go black */
+.ant-card-head,
+.ant-card-head-title{
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+}
+
+/* Tags contrast in dark mode */
+.dark .ant-tag{
+  background: rgba(255,255,255,0.10) !important;
+  border-color: var(--border) !important;
+  color: var(--card-foreground) !important;
+}
+
+/* Code/console blocks readable across themes */
+pre, code, kbd, samp{
+  background: rgba(3,2,19,0.04);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.dark pre, .dark code, .dark kbd, .dark samp{
+  background: rgba(255,255,255,0.08);
+  color: var(--card-foreground);
+  border-color: var(--border);
 }
 
 /* Tags*/
