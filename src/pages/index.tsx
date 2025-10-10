@@ -2,6 +2,7 @@ import { Typography, Button, Row, Col, Card, Tag, Form, Input, App as AntdApp } 
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useMemo, useState, useEffect } from "react";
+import type { CSSProperties } from "react";
 import type { Variants } from "framer-motion";
 import Portrait from "@/components/Portrait";
 import ProjectCard from "@/components/ProjectCard";
@@ -30,6 +31,7 @@ export default function Home() {
   type SkillItem = { name: string; percent: number };
   type SkillCategory = { title: string; color?: string; items: SkillItem[] };
   const skillsData = skills as SkillCategory[];
+  type ContactForm = { website?: string; name: string; email: string; subject?: string; message: string };
 
   // Time-based challenge (unique per render)
   type Challenge = { ts: number; salt: string; token: string };
@@ -232,7 +234,29 @@ export default function Home() {
               const bar = cat.color || "#ff7a00";
               return (
                 <Col xs={24} md={8} key={cat.title}>
-                  <Card className="xp-card skill-card" bodyStyle={{ padding: 18 }} style={{ ['--bar-color' as any]: bar }}>
+                {(() => {
+                  const cardStyle = ({ ['--bar-color' as string]: bar } as unknown) as CSSProperties;
+                  return (
+                    <Card className="xp-card skill-card" bodyStyle={{ padding: 18 }} style={cardStyle}>
+                      <div className="skill-head">
+                        <span className="skill-icon">�YZ"</span>
+                        <strong>{cat.title}</strong>
+                      </div>
+                      <div className="skill-list">
+                        {(cat.items || []).map((it: SkillItem) => {
+                          const pct = Math.max(0, Math.min(100, Number(it.percent) || 0));
+                          return (
+                            <div className="skill-row" key={it.name}>
+                              <span>{it.name}</span>
+                              <div className="skill-track"><div className="skill-fill" style={{ width: pct + '%' }} /></div>
+                              <span className="skill-pct">{pct}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </Card>
+                  );
+                })()}
                     <div className="skill-head">
                       <span className="skill-icon">🎓</span>
                       <strong>{cat.title}</strong>
@@ -372,7 +396,7 @@ export default function Home() {
                 <Card className="xp-card contact-card" title={<strong>Send a Message</strong>}>
                   <Form
                     layout="vertical"
-                    onFinish={async (v) => {
+                    onFinish={async (v: ContactForm) => {
                       // Honeypot check (simple bot trap)
                       if (v.website) { message.error("Submission blocked."); return; }
                       // Time challenge: require short delay and intact token
