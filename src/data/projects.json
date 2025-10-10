@@ -18,7 +18,8 @@
     "title": "Fixedbymyc.com - BMW Vehicle Repair Website",
     "description": "Premium vehicle repair services platform for BMW, MINI, Rolls-Royce, and Motorrad.",
     "stack": [
-      "Typescrip(React)",
+      "Typescript",
+      "React.js",
       "Next.js",
       "Ant Design",
       "NextAUth.js",

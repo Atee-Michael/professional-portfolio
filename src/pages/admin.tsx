@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Button, Card, Form, Input, Modal, Space, Table, Tag, message, Upload, Tabs } from "antd";
 import type { ColumnsType } from "antd/es/table";
@@ -69,36 +69,72 @@ export default function AdminPage() {
   const loadLogs = async () => { setLogsLoading(true); const r = await fetch("/api/admin/logs?limit=200"); if (r.ok) setLogs(await r.json()); setLogsLoading(false); };
   useEffect(() => { if (isAdmin) loadLogs(); }, [isAdmin]);
 
-  // Admin idle sign-out
+  // Admin idle sign-out with countdown warning
+  const [idleWarnOpen, setIdleWarnOpen] = useState(false);
+  const [idleCountdown, setIdleCountdown] = useState(0);
+  const resetIdleRef = useRef<null | (() => void)>(null);
   useEffect(() => {
     if (!isAdmin) return; // only track on admin
     const minutes = Number(process.env.NEXT_PUBLIC_ADMIN_IDLE_MINUTES) || 15; // default 15 mins
     const timeoutMs = Math.max(1, minutes) * 60_000;
-    let timer: any = null;
+    const warnSec = Math.max(5, Number(process.env.NEXT_PUBLIC_ADMIN_WARNING_SECONDS) || 30);
+
+    let warnTimer: any = null;
+    let signoutTimer: any = null;
+    let countdownTimer: any = null;
+    let deadline = Date.now() + timeoutMs;
     let signedOut = false;
 
-    const schedule = () => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        if (!signedOut) {
-          signedOut = true;
-          message.warning("Signed out due to inactivity");
-          signOut();
-        }
-      }, timeoutMs);
+    const clearAll = () => {
+      if (warnTimer) clearTimeout(warnTimer);
+      if (signoutTimer) clearTimeout(signoutTimer);
+      if (countdownTimer) clearInterval(countdownTimer);
+      warnTimer = null; signoutTimer = null; countdownTimer = null;
     };
+
+    const doSignOut = () => {
+      if (signedOut) return;
+      signedOut = true;
+      clearAll();
+      setIdleWarnOpen(false);
+      message.warning("Signed out due to inactivity");
+      signOut();
+    };
+
+    const startTimers = () => {
+      clearAll();
+      setIdleWarnOpen(false);
+      deadline = Date.now() + timeoutMs;
+      const warnDelay = Math.max(0, timeoutMs - warnSec * 1000);
+      warnTimer = setTimeout(() => {
+        if (signedOut) return;
+        setIdleWarnOpen(true);
+        setIdleCountdown(Math.ceil((deadline - Date.now()) / 1000));
+        countdownTimer = setInterval(() => {
+          const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+          setIdleCountdown(remaining);
+          if (remaining <= 0) {
+            clearInterval(countdownTimer); countdownTimer = null;
+            doSignOut();
+          }
+        }, 250);
+      }, warnDelay);
+      signoutTimer = setTimeout(() => doSignOut(), timeoutMs);
+    };
+
+    resetIdleRef.current = startTimers;
 
     const onActivity = () => {
-      if (signedOut) return;
-      schedule();
+      if (signedOut || document.hidden) return; // ignore when hidden
+      startTimers();
     };
 
-    const events = ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "visibilitychange"] as const;
+    const events = ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "visibilitychange", "focus", "blur"] as const;
     events.forEach((e) => window.addEventListener(e, onActivity, { passive: true } as any));
-    schedule();
+    startTimers();
 
     return () => {
-      if (timer) clearTimeout(timer);
+      clearAll();
       events.forEach((e) => window.removeEventListener(e, onActivity as any));
     };
   }, [isAdmin]);
@@ -294,6 +330,24 @@ export default function AdminPage() {
           </Form>
         </Modal>
 
+        {/* Idle Warning Modal */}
+        <Modal
+          open={idleWarnOpen}
+          closable={false}
+          maskClosable={false}
+          keyboard={false}
+          footer={null}
+          destroyOnClose
+          title="Inactive Session"
+        >
+          <p>You will be signed out due to inactivity.</p>
+          <p>Time remaining: <strong>{idleCountdown}s</strong></p>
+          <Space>
+            <Button onClick={() => { resetIdleRef.current?.(); }} type="primary">Continue Session</Button>
+            <Button danger onClick={() => { message.warning("Signing out"); signOut(); }}>Sign out now</Button>
+          </Space>
+        </Modal>
+
         {/* Skill Modal */}
         <Modal title={skillEdit && skillEdit.index >= 0 ? "Edit Skill Category" : "New Skill Category"} open={!!skillEdit} onCancel={() => setSkillEdit(null)} footer={null} destroyOnClose>
           <Form layout="vertical" onFinish={saveSkill} initialValues={skillEdit?.initial}>
@@ -307,4 +361,3 @@ export default function AdminPage() {
     </section>
   );
 }
-
