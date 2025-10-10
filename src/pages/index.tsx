@@ -1,4 +1,4 @@
-import { Typography, Button, Row, Col, Card, Tag, Form, Input, message } from "antd";
+import { Typography, Button, Row, Col, Card, Tag, Form, Input, App as AntdApp } from "antd";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useMemo, useState, useEffect } from "react";
@@ -13,6 +13,7 @@ import HumanChallenge from "@/components/HumanChallenge";
 const { Title, Paragraph } = Typography;
 
 export default function Home() {
+  const { message } = AntdApp.useApp();
   const container: Variants = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
@@ -396,11 +397,29 @@ export default function Home() {
                         });
                         const json = await res.json().catch(() => ({}));
                         if (!res.ok) {
-                          message.error(json.error || 'Failed to send message');
+                          // Fallback: if server cannot deliver email (e.g., TLS interception), try mailto so user can still contact
+                          if (res.status === 502 || String(json.error || '').toLowerCase().includes('email delivery failed')) {
+                            const sanitize = (s: string, max = 500) => (s || '')
+                              .toString()
+                              .replace(/[\u0000-\u001F\u007F]/g, ' ')
+                              .replace(/%0a|%0d|\r|\n/gi, ' ')
+                              .replace(/[<>]/g, '')
+                              .replace(/\s{2,}/g, ' ')
+                              .trim()
+                              .slice(0, max);
+                            const name = sanitize(v.name, 80);
+                            const subj = sanitize(v.subject || 'Portfolio Contact', 120);
+                            const body = sanitize(v.message, 2000);
+                            const mail = `mailto:${encodeURIComponent('ateemichael@yahoo.com')}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(`${name} <${v.email}>\n\n${body}`)}`;
+                            message.warning('Email service unavailable. Opening your mail app...');
+                            window.location.href = mail;
+                          } else {
+                            message.error(json.error || 'Failed to send message');
+                          }
                           setSending(false);
                           return;
                         }
-                        message.success('Message sent! I\'ll get back to you soon.');
+                        message.success('Message sent successfully.');
                         // reset form fields
                         (document.querySelector('#contact form') as HTMLFormElement)?.reset();
                         setHumanOk(false);

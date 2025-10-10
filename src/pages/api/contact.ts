@@ -83,16 +83,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const to = process.env.CONTACT_TO || "ateemichael@yahoo.com";
     const fromUser = process.env.GMAIL_USER || process.env.SMTP_USER || "";
     const pass = process.env.GMAIL_APP_PASSWORD || process.env.SMTP_PASS || "";
+    const dryRun = String(process.env.CONTACT_DRY_RUN || "false") === "true";
     if (!fromUser || !pass) {
+      if (dryRun) {
+        const logLine = { ts: new Date().toISOString(), ip: key.split(":")[0], name, email, subject, note: "dry_run" };
+        appendLocalLog({ ...logLine, ok: true });
+        pushLogSnag(logLine);
+        return res.json({ ok: true, dryRun: true });
+      }
       return res.status(500).json({ error: "Email service not configured" });
     }
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port: Number(process.env.SMTP_PORT || 465),
-      secure: String(process.env.SMTP_SECURE || "true") === "true",
+    const host = process.env.SMTP_HOST || "smtp.gmail.com";
+    const explicitPort = process.env.SMTP_PORT;
+    const tlsInsecure = String(process.env.SMTP_TLS_INSECURE || "false") === "true";
+    const baseConfig = {
+      host,
+      port: Number(explicitPort || 465),
+      secure: String(process.env.SMTP_SECURE || (explicitPort ? "false" : "true")) === "true",
       auth: { user: fromUser, pass },
-    });
+      tls: tlsInsecure ? { rejectUnauthorized: false } : { servername: host },
+    } as const;
+
+    const sendWith = async (cfg: any) => {
+      const transporter = nodemailer.createTransport(cfg);
+      return transporter.sendMail({
+        from: fromUser,
+        to,
+        subject: `[Portfolio] ${subject}`,
+        text,
+        html,
+        replyTo: email,
+      });
+    };
 
     const text = [
       `From: ${name} <${email}>`,
@@ -110,14 +133,42 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       </div>
     `;
 
-    await transporter.sendMail({
-      from: fromUser,
-      to,
-      subject: `[Portfolio] ${subject}`,
-      text,
-      html,
-      replyTo: email,
-    });
+    try {
+      await sendWith(baseConfig);
+    } catch (e: any) {
+      // If using default Gmail settings and no explicit port provided, retry with 587 STARTTLS
+      const primaryCode = e?.code || e?.responseCode || "UNKNOWN";
+      const shouldRetry = !explicitPort && host === "smtp.gmail.com";
+      if (shouldRetry) {
+        try {
+          await sendWith({
+            ...baseConfig,
+            port: 587,
+            secure: false,
+            tls: tlsInsecure ? { rejectUnauthorized: false } : { ciphers: "TLSv1.2", rejectUnauthorized: true, servername: host },
+          });
+        } catch (e2: any) {
+          const code2 = e2?.code || e2?.responseCode || "UNKNOWN";
+          appendLocalLog({ ts: new Date().toISOString(), err: "sendMail failed (retry)", code: code2, msg: e2?.message || String(e2) });
+          if (dryRun) {
+            const logLine = { ts: new Date().toISOString(), ip: key.split(":")[0], name, email, subject, note: "dry_run_after_retry" };
+            appendLocalLog({ ...logLine, ok: true });
+            pushLogSnag(logLine);
+            return res.json({ ok: true, dryRun: true });
+          }
+          return res.status(502).json({ error: "Email delivery failed" });
+        }
+      } else {
+        appendLocalLog({ ts: new Date().toISOString(), err: "sendMail failed", code: primaryCode, msg: e?.message || String(e) });
+        if (dryRun) {
+          const logLine = { ts: new Date().toISOString(), ip: key.split(":")[0], name, email, subject, note: "dry_run_primary" };
+          appendLocalLog({ ...logLine, ok: true });
+          pushLogSnag(logLine);
+          return res.json({ ok: true, dryRun: true });
+        }
+        return res.status(502).json({ error: "Email delivery failed" });
+      }
+    }
 
     const logLine = { ts: new Date().toISOString(), ip: key.split(":")[0], name, email, subject };
     appendLocalLog({ ...logLine, ok: true });
@@ -129,4 +180,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: "Server error" });
   }
 }
-

@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { ConfigProvider, theme as antdTheme } from "antd";
+import { ConfigProvider, theme as antdTheme, App as AntdApp } from "antd";
 import { SessionProvider } from "next-auth/react";
 import "@/styles/globals.css";
 import "@/styles/theme.css";
@@ -50,9 +50,11 @@ export default function App({ Component, pageProps }: AppProps) {
           },
         }}
       >
-        <SiteLayout>
-          <Component {...pageProps} />
-        </SiteLayout>
+        <AntdApp>
+          <SiteLayout>
+            <Component {...pageProps} />
+          </SiteLayout>
+        </AntdApp>
       </ConfigProvider>
       </SessionProvider>
     </>

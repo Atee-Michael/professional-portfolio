@@ -1,0 +1,10 @@
+{"ts":"2025-10-10T16:54:48.374Z","err":"self-signed certificate in certificate chain"}
+{"ts":"2025-10-10T17:12:26.177Z","err":"sendMail failed","code":"ESOCKET","msg":"self-signed certificate in certificate chain"}
+{"ts":"2025-10-10T17:19:05.246Z","err":"sendMail failed","code":"ESOCKET","msg":"self-signed certificate in certificate chain"}
+{"ts":"2025-10-10T17:19:09.139Z","err":"sendMail failed","code":"ESOCKET","msg":"self-signed certificate in certificate chain"}
+{"ts":"2025-10-10T17:19:46.314Z","err":"sendMail failed","code":"ESOCKET","msg":"self-signed certificate in certificate chain"}
+{"ts":"2025-10-10T17:25:21.510Z","err":"sendMail failed (retry)","code":"ESOCKET","msg":"self-signed certificate in certificate chain"}
+{"ts":"2025-10-10T17:36:30.521Z","err":"sendMail failed (retry)","code":"ESOCKET","msg":"self-signed certificate in certificate chain"}
+{"ts":"2025-10-10T17:41:55.213Z","err":"sendMail failed (retry)","code":"ESOCKET","msg":"self-signed certificate in certificate chain"}
+{"ts":"2025-10-10T17:43:29.343Z","err":"sendMail failed (retry)","code":"ESOCKET","msg":"self-signed certificate in certificate chain"}
+{"ts":"2025-10-10T17:43:29.345Z","ip":"","name":"Michael Atee","email":"ateemichael@yahoo.com","subject":"Test","note":"dry_run_after_retry","ok":true}
