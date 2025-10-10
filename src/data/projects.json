@@ -2,24 +2,52 @@
   {
     "title": "Scanzo — SQL Injection Scanner",
     "description": "Browser-based SQLi scanner across UI, middleware, and backend layers.",
-    "stack": ["JavaScript", "Chrome API", "OWASP"],
-    "categories": ["Security", "Tools"],
+    "stack": [
+      "JavaScript",
+      "Chrome API",
+      "OWASP"
+    ],
+    "categories": [
+      "Security",
+      "Tools"
+    ],
     "repoLink": "https://github.com/michaelatee/scanzo",
     "docPath": "/docs/scanzo-tech-doc.pdf"
   },
   {
-    "title": "Fixed by MYC — Automotive Advisory",
-    "description": "Premium advisory platform for BMW, MINI, Rolls-Royce, and Motorrad.",
-    "stack": ["Next.js", "Ant Design"],
-    "categories": ["Full‑Stack", "Frontend"],
+    "title": "Fixedbymyc.com - BMW Vehicle Repair Website",
+    "description": "Premium vehicle repair services platform for BMW, MINI, Rolls-Royce, and Motorrad.",
+    "stack": [
+      "Typescrip(React)",
+      "Next.js",
+      "Ant Design",
+      "NextAUth.js",
+      "Stripe",
+      "Sentry",
+      "Vercel",
+      "PostgreSQL"
+    ],
+    "categories": [
+      "Full‑Stack",
+      "Frontend",
+      "Security"
+    ],
     "repoLink": "https://github.com/michaelatee/fixedbymyc",
-    "docPath": "/docs/fixedbymyc-doc.pdf"
+    "docPath": "/docs/fixedbymyc-doc.pdf",
+    "liveLink": "https://www.fixedbymyc.com"
   },
   {
     "title": "IoT Intrusion Detection (ESP32-CAM)",
     "description": "Motion-triggered capture with secure upload pipeline and event logging.",
-    "stack": ["ESP32", "C++", "HTTPClient"],
-    "categories": ["Security", "IoT"],
+    "stack": [
+      "ESP32",
+      "C++",
+      "HTTPClient"
+    ],
+    "categories": [
+      "Security",
+      "IoT"
+    ],
     "repoLink": "https://github.com/michaelatee/iot-ids",
     "docPath": "/docs/iot-ids-doc.pdf"
   }

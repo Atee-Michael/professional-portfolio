@@ -135,13 +135,18 @@ export default function AdminPage() {
   };
 
   const onFinish = async (values: any) => {
+    const toArray = (v: any): string[] => {
+      if (Array.isArray(v)) return v.map((s) => String(s).trim()).filter(Boolean);
+      return String(v ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+    };
+
     const payload: Project = {
       title: values.title,
       description: values.description,
-      stack: values.stack?.split(",").map((s: string) => s.trim()).filter(Boolean) || [],
+      stack: toArray(values.stack),
       repoLink: values.repoLink,
       liveLink: values.liveLink,
-      categories: values.categories?.split(",").map((s: string) => s.trim()).filter(Boolean) || [],
+      categories: toArray(values.categories),
       docPath: values.docPath || "",
     };
     const method = editing ? "PUT" : "POST";
@@ -270,11 +275,16 @@ export default function AdminPage() {
 
         {/* Project Modal */}
         <Modal title={editing && editing.index >= 0 ? "Edit Project" : "New Project"} open={!!editing} onCancel={() => setEditing(null)} footer={null} destroyOnClose>
-          <Form id="admin-form" layout="vertical" onFinish={onFinish} initialValues={editing?.initial}>
+          <Form
+            id="admin-form"
+            layout="vertical"
+            onFinish={onFinish}
+            initialValues={editing ? { ...editing.initial, stack: editing.initial?.stack?.join(", "), categories: editing.initial?.categories?.join(", ") } : undefined}
+          >
             <Form.Item name="title" label="Title" rules={[{ required: true }]}><Input maxLength={120} /></Form.Item>
             <Form.Item name="description" label="Description" rules={[{ required: true }]}><Input.TextArea rows={4} maxLength={600} /></Form.Item>
-            <Form.Item name="stack" label="Stack (comma‑separated)"><Input maxLength={200} /></Form.Item>
-            <Form.Item name="categories" label="Categories (comma‑separated)"><Input maxLength={200} /></Form.Item>
+            <Form.Item name="stack" label="Stack (comma-separated)"><Input maxLength={200} /></Form.Item>
+            <Form.Item name="categories" label="Categories (comma-separated)"><Input maxLength={200} /></Form.Item>
             <Form.Item name="repoLink" label="Repo Link"><Input type="url" maxLength={300} /></Form.Item>
             <Form.Item name="liveLink" label="Live Link"><Input type="url" maxLength={300} /></Form.Item>
             <Form.Item name="docPath" label="Doc Path"><Input id="docPath" readOnly /></Form.Item>
@@ -297,3 +307,4 @@ export default function AdminPage() {
     </section>
   );
 }
+
