@@ -5,32 +5,35 @@ import fs from "fs";
 import path from "path";
 import { sanitizeText, sanitizeArray } from "@/lib/sanitize";
 import { keyFromRequest, rateLimit } from "@/lib/rateLimit";
+import type { Session } from "next-auth";
+import type { Project } from "@/types/project";
 
 const dataPath = path.join(process.cwd(), "src/data/projects.json");
 const logPath = path.join(process.cwd(), "src/data/admin-log.jsonl");
 
-function requireAdmin(session: any) {
-  const isAdmin = Boolean(session?.user && (session.user as any).isAdmin);
+function requireAdmin(session: Session | null): asserts session is Session {
+  const isAdmin = Boolean((session?.user as { isAdmin?: boolean } | undefined)?.isAdmin);
   if (!isAdmin) {
-    const err: any = new Error("Forbidden");
-    err.status = 403; throw err;
+    const err = new Error("Forbidden") as Error & { status?: number };
+    err.status = 403;
+    throw err;
   }
 }
 
-function readProjects() {
+function readProjects(): Project[] {
   const raw = fs.readFileSync(dataPath, "utf8");
-  return JSON.parse(raw);
+  return JSON.parse(raw) as Project[];
 }
-function writeProjects(projects: any) {
+function writeProjects(projects: Project[]) {
   fs.writeFileSync(dataPath, JSON.stringify(projects, null, 2));
 }
-function log(session: any, action: string, detail?: any) {
+function log(session: Session | null, action: string, detail?: unknown) {
   const line = JSON.stringify({ ts: new Date().toISOString(), user: session?.user?.email || "unknown", action, detail }) + "\n";
   fs.appendFileSync(logPath, line);
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions as any);
+  const session = await getServerSession(req, res, authOptions);
   const key = keyFromRequest(req);
   const rl = rateLimit(key, 60, 60_000); // 60 req/min per IP per route
   if (!rl.allowed) return res.status(429).json({ error: "Too many requests" });
@@ -43,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === "POST") {
       requireAdmin(session);
       const body = req.body || {};
-      const item = {
+      const item: Project = {
         title: sanitizeText(body.title, 120),
         description: sanitizeText(body.description, 600),
         stack: sanitizeArray(body.stack, 10),
@@ -66,7 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const projects = readProjects();
       if (idx < 0 || idx >= projects.length) return res.status(404).json({ error: "not found" });
       const current = projects[idx];
-      const updated = {
+      const updated: Project = {
         ...current,
         title: sanitizeText(body.title ?? current.title, 120),
         description: sanitizeText(body.description ?? current.description, 600),
@@ -92,7 +95,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.json({ ok: true });
     }
     return res.status(405).json({ error: "Method not allowed" });
-  } catch (e: any) {
-    return res.status(e.status || 500).json({ error: e.message || "Server error" });
+  } catch (e: unknown) {
+    const status = typeof e === "object" && e && "status" in e ? Number((e as { status?: unknown }).status) : 500;
+    const msg = typeof e === "object" && e && "message" in e ? String((e as { message?: unknown }).message) : "Server error";
+    return res.status(status || 500).json({ error: msg });
   }
 }

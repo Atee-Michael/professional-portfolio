@@ -28,5 +28,5 @@ export type AdminLog = {
   ts: string;
   user: string;
   action: string;
-  detail?: any;
+  detail?: unknown;
 };

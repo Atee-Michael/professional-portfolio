@@ -25,12 +25,12 @@ export default function HumanChallenge({ onSolved }: Props) {
   useEffect(() => {
     if (solved) return;
     const within = Math.abs(value - target) <= 2; // must align closely
-    let t: any;
+    let t: ReturnType<typeof setTimeout> | undefined;
     if (within) {
       // Require a short steady hold to avoid accidental hits
       t = setTimeout(() => { setSolved(true); onSolved(token); }, 450);
     }
-    return () => t && clearTimeout(t);
+    return () => { if (t) clearTimeout(t); };
   }, [value, target, token, solved, onSolved]);
 
   // Precisely position glow based on rail geometry to match handle position

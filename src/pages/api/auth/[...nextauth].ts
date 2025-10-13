@@ -1,6 +1,8 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import type { Session } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 
 const adminEmails = (process.env.ADMIN_EMAILS || "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
 
@@ -18,16 +20,16 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, profile }) {
-      if (profile && (profile as any).email) {
-        const email = ((profile as any).email as string).toLowerCase();
+      if (profile && "email" in profile && typeof profile.email === "string") {
+        const email = profile.email.toLowerCase();
         token.email = email;
-        token.isAdmin = adminEmails.includes(email);
+        (token as JWT).isAdmin = adminEmails.includes(email);
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (session?.user) {
-        (session.user as any).isAdmin = Boolean((token as any).isAdmin);
+        session.user.isAdmin = Boolean(token.isAdmin);
       }
       return session;
     },

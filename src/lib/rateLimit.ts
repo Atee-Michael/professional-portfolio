@@ -1,3 +1,5 @@
+import type { NextApiRequest } from "next";
+
 type Key = string;
 
 const buckets = new Map<Key, { count: number; resetAt: number }>();
@@ -16,9 +18,10 @@ export function rateLimit(key: string, limit = 30, windowMs = 60_000) {
   return { allowed: true, remaining: limit - b.count };
 }
 
-export function keyFromRequest(req: any) {
-  const ip = (req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown").toString();
+export function keyFromRequest(req: Pick<NextApiRequest, "headers" | "socket" | "url">) {
+  const forwarded = req.headers["x-forwarded-for"];
+  const ip = (Array.isArray(forwarded) ? forwarded[0] : forwarded) || req.socket?.remoteAddress || "unknown";
   const route = req.url?.split("?")[0] || "";
-  return `${ip}:${route}`;
+  return `${String(ip)}:${route}`;
 }
 

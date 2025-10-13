@@ -8,8 +8,9 @@ import { keyFromRequest, rateLimit } from "@/lib/rateLimit";
 const logPath = path.join(process.cwd(), "src/data/admin-log.jsonl");
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions as any);
-  if (!(session?.user && (session.user as any).isAdmin)) return res.status(403).json({ error: "Forbidden" });
+  const session = await getServerSession(req, res, authOptions);
+  const isAdmin = Boolean((session?.user as { isAdmin?: boolean } | undefined)?.isAdmin);
+  if (!isAdmin) return res.status(403).json({ error: "Forbidden" });
 
   const rl = rateLimit(keyFromRequest(req), 60, 60_000);
   if (!rl.allowed) return res.status(429).json({ error: "Too many requests" });
@@ -26,8 +27,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try { return JSON.parse(line); } catch { return { ts: null, user: null, action: "parse_error", raw: line }; }
     }).reverse(); // newest first
     return res.json(entries);
-  } catch (e: any) {
-    return res.status(500).json({ error: e?.message || "Failed to read logs" });
+  } catch (e: unknown) {
+    const msg = typeof e === "object" && e && "message" in e ? String((e as { message?: unknown }).message) : "Failed to read logs";
+    return res.status(500).json({ error: msg });
   }
 }
 
