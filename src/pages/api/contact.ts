@@ -102,6 +102,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const isDev = process.env.NODE_ENV !== "production";
+    const allowInsecureTLS = String(process.env.CONTACT_ALLOW_INSECURE_TLS || "false") === "true";
 
     const text = [
       `From: ${name} <${email}>`,
@@ -133,7 +134,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         port: Number(process.env.SMTP_PORT || 465),
         secure: String(process.env.SMTP_SECURE ?? "true") === "true",
         auth: { user: fromUser, pass },
-        ...(isDev && { tls: { rejectUnauthorized: false } }),
+        ...((isDev || allowInsecureTLS) && { tls: { rejectUnauthorized: false } }),
       } as Record<string, unknown>);
 
       await transporter.sendMail({

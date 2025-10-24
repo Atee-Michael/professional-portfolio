@@ -6,18 +6,17 @@ declare module 'nodemailer' {
     text?: string;
     html?: string;
     replyTo?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   }
 
   export interface Transporter {
-    sendMail(mail: SendMailOptions): Promise<any>;
+    sendMail(mail: SendMailOptions): Promise<unknown>;
   }
 
-  export function createTransport(options: any): Transporter;
+  export function createTransport(options: unknown): Transporter;
 
   const _default: {
     createTransport: typeof createTransport;
   };
   export default _default;
 }
-
