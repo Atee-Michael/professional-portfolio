@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import fs from "fs";
 import path from "path";
-import formidable from "formidable";
+import formidable, { Fields, Files, File } from "formidable";
 import { assertPdfBuffer } from "@/lib/sanitize";
 import { keyFromRequest, rateLimit } from "@/lib/rateLimit";
 import type { Session } from "next-auth";
@@ -23,10 +23,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!rl.allowed) return res.status(429).json({ error: "Too many uploads" });
 
   const form = formidable({ multiples: false, maxFileSize: 10 * 1024 * 1024 });
-  const { fields, files }: { fields: formidable.Fields; files: formidable.Files } = await new Promise((resolve, reject) => {
+  const { fields, files }: { fields: Fields; files: Files } = await new Promise((resolve, reject) => {
     form.parse(req, (err, fields, files) => (err ? reject(err) : resolve({ fields, files })));
   });
-  const f = files?.file as formidable.File | undefined;
+  const f = files?.file as File | undefined;
   if (!f) return res.status(400).json({ error: "file field required" });
   const ext = path.extname(f.originalFilename || "").toLowerCase();
   if (ext !== ".pdf") return res.status(400).json({ error: "PDF only" });
