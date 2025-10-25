@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Slider } from "antd";
 
 type Props = {
@@ -34,7 +34,7 @@ export default function HumanChallenge({ onSolved }: Props) {
   }, [value, target, token, solved, onSolved]);
 
   // Precisely position glow based on rail geometry to match handle position
-  const recalc = () => {
+  const recalc =useCallback (() => {
     const el = wrapRef.current?.querySelector<HTMLElement>('.ant-slider-rail');
     const root = wrapRef.current;
     if (!el || !root) return;
@@ -43,7 +43,7 @@ export default function HumanChallenge({ onSolved }: Props) {
     const left = (rail.left - box.left) + (target / 100) * rail.width;
     const top = (rail.top - box.top) + rail.height / 2 - 6;
     setGlowPos({ left, top });
-  };
+  }, [target])
   useEffect(() => {
     recalc();
     const ro = new ResizeObserver(() => recalc());
@@ -51,7 +51,7 @@ export default function HumanChallenge({ onSolved }: Props) {
     window.addEventListener('resize', recalc);
     return () => { window.removeEventListener('resize', recalc); ro.disconnect(); };
     // target affects position on each mount
-  }, [target]);
+  }, [recalc]);
 
   return (
     <div className="human-box">
